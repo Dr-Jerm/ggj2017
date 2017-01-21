@@ -1,7 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 21.01.2017 01:32:00
-
-mtllib test_arrow.mtl
+# File Created: 21.01.2017 01:34:06
 
 #
 # object test_arrow
@@ -47,7 +45,6 @@ vn -0.967926 0.005923 0.251164
 # 14 vertex normals
 
 g test_arrow
-usemtl wire_141007058
 s off
 f -20//-14 -7//-14 -6//-14 -21//-14 
 f -19//-13 -5//-13 -7//-13 -20//-13 
