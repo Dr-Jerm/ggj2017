@@ -41,11 +41,13 @@ class Sheep extends Actor {
     this.targetPos = this.getNewTargetPos();
     this.velocity = new THREE.Vector3(0,0,0);
 
-    this.speed = 0.1;
+    this.speed = 1.5;
+    this.rotationRate = 1.5;
 
     scene.add(this.object3D);
     world.addBody(this.body);
 
+    /*
     var material = new THREE.LineBasicMaterial({
       color: 0x0000ff
     });
@@ -56,25 +58,84 @@ class Sheep extends Actor {
       new THREE.Vector3( 10, 0, 0 )
     );
 
-    var line = new THREE.Line( geometry, material );
-    this.object3D.add( line );
+    this.line = new THREE.Line( geometry, material );
+    this.line1 = new THREE.Line( geometry, material );
+    //this.object3D.add( line );
+    scene.add( this.line );
+    scene.add( this.line1 );
+    */
 
+    this.scene = scene;
   }
 
-  tick()
-  {
-    super.tick();
 
+
+  tick(delta)
+  {
+    super.tick(delta);
+
+    this.updateTransform(delta);    
+
+
+    //this.drawDebugLines()
+  }
+
+  updateTransform(delta)
+  {
     var _targetPos = this.targetPos.clone();
     var _currentPos = this.object3D.position.clone();
 
-    var _direction = _targetPos.clone().sub(_currentPos).normalize();    
-    var _distance =  _targetPos.distanceTo(_currentPos);
+    // Handle Position
+    var _fwdVect = this.getForwardVector();
 
+    // Handle Rotation
+    var _direction = _targetPos.clone().sub(_currentPos).normalize();  
+    var _dotProd = _fwdVect.clone().dot(_direction);
+    var _theta = Math.acos(_dotProd);
+
+    // Get the destination angle
+    var _destDotProd = new THREE.Vector3(1,0,0).dot(_direction);
+    var _destTheta = Math.acos(_destDotProd);
+    if(_direction.z > 0)
+    {
+      _destTheta = (2 * Math.PI) - _destTheta;      
+    }
+
+    // Ensure we do not use negative angles
+    if(this.object3D.rotation.y < 0)
+    {
+        this.object3D.rotation.y += (2 * Math.PI);
+    }
+
+    // Ensure we do not cross over 2 pi radians
+    var _yaw = this.object3D.rotation.clone().y % (2 * Math.PI);
+
+    // Get whether to go clockwise or counter clockwise
+    var _angleDif = _yaw - _destTheta;
+    var _absDif = Math.abs(_angleDif);   
+    
+    var _finalRotRate = this.rotationRate * delta;
+    if(_angleDif > 0.0 && _absDif <= Math.PI)
+    {
+        _finalRotRate *= -1;  
+    }
+    else if(_angleDif < 0.0 && _absDif > Math.PI)
+    {
+        _finalRotRate *= -1;
+    }
+
+    if(_theta > 0.01)
+    {
+      this.object3D.rotation.y += _finalRotRate;
+    }
+
+    // Update Position
+    var _distance =  _targetPos.distanceTo(_currentPos);
     var _velocity = new THREE.Vector3(0,0,0);
     if(_distance > this.speed)
     {
-      _velocity = _direction.clone().multiplyScalar(this.speed);
+      _velocity = _fwdVect.clone().multiplyScalar(this.speed);
+      _velocity.multiplyScalar(delta);
     }
     else
     {
@@ -82,27 +143,41 @@ class Sheep extends Actor {
     }
 
     this.object3D.position.add(_velocity);
-
-    /*
-    var dotProd = .clone().dot(_currentPos);
-    _targetPos.mag
-    var _theta = Math.arccos()
-    */
-
-    this.object3D.rotation.y += 0.1;
   }
 
+  // Return the next target position
   getNewTargetPos()
   {
-      var randX = this.randRange(-10,10);
-      var randZ = this.randRange(-10,10);
+      var randX = this.randRange(-5,5);
+      var randZ = this.randRange(-5,5);
       return new THREE.Vector3(randX,0,randZ);
+      //return new THREE.Vector3(1,0,-1);
   }
 
-  randRange(min,max)
+  // Draw forward and destination lines
+  drawDebugLines()
   {
-      return Math.floor(Math.random()*(max-min+1)+min);
+    var _targetPos = this.targetPos.clone();
+    var _currentPos = this.object3D.position.clone();
+
+    var _fwdVect = this.getForwardVector();
+    _fwdVect.add(_currentPos);
+
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(
+      _currentPos,
+      _fwdVect
+    );
+    this.line.geometry = geometry;
+
+    var geometry1 = new THREE.Geometry();
+    geometry.vertices.push(
+      _currentPos,
+      _targetPos
+    );
+    this.line1.geometry = geometry;
   }
+
 }
 
 module.exports = Sheep;

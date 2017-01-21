@@ -23,7 +23,7 @@ class Scene2 extends THREE.Scene {
       1000
     );
     camera.position.y = 10;
-    camera.rotation.z = 10;
+    camera.rotation.x = 10;
     this.controls = new THREE.OrbitControls( camera, renderer.domElement );
     this.controls.enableZoom = true;
     this.controls.enableDamping = true;
@@ -45,19 +45,33 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
-    this.sheep = new Sheep(this, this.world);
+    this.herd = [];
+    for(var i=0; i<10; i++)
+    {
+        this.herd[i] = new Sheep(this, this.world);    
+    }    
+
+    this.bPause = false;
     
-  document.body.onkeyup = function(e){
+  document.body.onkeyup = (e)=>{
     if(e.keyCode == 32){
         console.log("I pressed spacebar");
+        this.bPause = !this.bPause;
     }
   }
     
   }
   
   tick (delta) {
-    this.controls.update();
-    this.sheep.tick(delta);
+    if(!this.bPause)
+    {
+        this.controls.update();
+
+        for(var i=0; i<10; i++)
+        {
+            this.herd[i].tick(delta);
+        } 
+    }    
   }
   
 }
