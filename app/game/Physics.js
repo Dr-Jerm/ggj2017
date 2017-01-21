@@ -7,6 +7,8 @@ class Physics extends Actor {
   constructor(scene, world) {
     super(scene, world);
     
+    this.ticks = true;
+    
     this.object3D.scale.set(1.0, 1.0,1.0);
     this.physicsEnabled = true;
     
@@ -34,6 +36,11 @@ class Physics extends Actor {
     });
     
     this.shape = new CANNON.Box(new CANNON.Vec3(1,1,1));
+    let collisionMesh = new THREE.Mesh(
+      new THREE.BoxGeometry( 1, 1, 1, 1, 1, 1 ),
+      new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
+    );
+    this.object3D.add(collisionMesh);
     this.mass = 10;
     this.body = new CANNON.Body({
       mass: this.mass
