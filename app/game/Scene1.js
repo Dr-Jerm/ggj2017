@@ -11,11 +11,14 @@ class Scene1 extends THREE.Scene {
   constructor(renderer) {
     super();
     this.controls;
-    this.controller1;
-    this.controller2;
+    
+    this.tickingActors = [];
+    
+    let controller1;
+    let controller2;
     
     this.world = new CANNON.World();
-    this.world.gravity.set(0,0,0);
+    this.world.gravity.set(0,-9.8,0);
     this.world.broadphase = new CANNON.NaiveBroadphase();
     this.world.solver.iterations = 10;
     
@@ -46,10 +49,11 @@ class Scene1 extends THREE.Scene {
     this.controls = new THREE.VRControls(camera);
     this.controls.standing = true;
     
-    this.controller1 = new Controller(0, this.controls);
-    this.add(this.controller1);
-    this.controller2 = new Controller(1, this.controls);
-    this.add(this.controller2);
+    controller1 = new Controller(0, this.controls);
+    this.tickingActors.push(controller1);
+    this.add(controller1);
+    controller2 = new Controller(1, this.controls);
+    this.add(controller2);
     
     let skybox = new Skybox();
     this.add(skybox.object3D);
@@ -61,16 +65,25 @@ class Scene1 extends THREE.Scene {
     this.world.add(groundPlane.body);
     
     let physics = new Physics();
+    physics.object3D.position.set(0,10,0);
     this.add(physics.object3D);
     this.world.add(physics.body);
   }
   
-  update () {
+  tick (delta) {
+    this.world.step(delta);
     this.controls.update();
-    this.controller1.update();
-    this.controller2.update();
+    tickActors(this.tickingActors, delta);
   }
   
 }
+
+let tickActors = function (actors, delta) {
+  for (let i = 0; i < actors.length; i++) {
+    if (actors[i].tick) {
+      actors[i].tick(delta);
+    }
+  }
+};
 
 module.exports = Scene1;

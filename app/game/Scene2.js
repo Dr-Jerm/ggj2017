@@ -55,9 +55,9 @@ class Scene2 extends THREE.Scene {
     
   }
   
-  update () {
+  tick (delta) {
     this.controls.update();
-    this.sheep.tick();
+    this.sheep.tick(delta);
   }
   
 }

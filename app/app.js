@@ -39,13 +39,19 @@ let init = function () {
   window.addEventListener('resize', onWindowResize, false);
 };
 
+let time;
+let delta = 0;
 let tick = function () {
   if (WEBVR.isAvailable() === true) {
     vrRenderer.requestAnimationFrame(tick);
   } else {
     window.requestAnimationFrame(tick);
   }
-  scene.update();
+  let now = new Date().getTime();
+  delta = now - (time || now);
+  time = now;
+  
+  scene.tick(delta);
   renderer.render(scene, scene.camera);
 };
 

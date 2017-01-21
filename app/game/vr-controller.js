@@ -38,6 +38,10 @@ class Controller extends THREE.ViveController  {
       self.add(object.clone());
     });
   }
+  
+  tick() {
+    this.update();
+  }
 }
 
 module.exports = Controller;
