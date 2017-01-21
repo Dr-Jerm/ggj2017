@@ -6,6 +6,7 @@ import CANNON from 'cannon';
 class Sheep extends Actor {
   constructor(scene, world) {
     super(scene, world);
+    this.ticks = true;
     this.object3D.scale.set(0.1,0.1,0.1);
     
     var self = this;

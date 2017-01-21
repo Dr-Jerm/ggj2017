@@ -2,6 +2,7 @@
 /* global THREE */
 import CANNON from 'cannon';
 import Controller from './vr-controller';
+import Game from './Game';
 import Skybox from './Skybox';
 import GroundPlane from './GroundPlane';
 import Physics from './Physics';
@@ -56,6 +57,9 @@ class Scene1 extends THREE.Scene {
     this.add(controller2);
     this.tickingActors.push(controller2);
     
+    window.game = new Game(this, this.world);
+    this.tickingActors.push(window.game);
+    
     let skybox = new Skybox(this, this.world);
     
     // let sheep = new Sheep();
@@ -63,7 +67,7 @@ class Scene1 extends THREE.Scene {
     let groundPlane = new GroundPlane(this, this.world);
     
     let physics = new Physics(this, this.world);
-    physics.setPosition(0,2,0);
+    physics.body.position.set(0,2,0);
     this.tickingActors.push(physics);
     
     document.body.onkeyup = function(e){

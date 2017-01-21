@@ -3,6 +3,8 @@
 class Actor {
   constructor(scene, world) {
     
+    this.ticks = false;
+    
     // THREE.js
     this.geometry = null;
     this.material = null;
@@ -16,10 +18,7 @@ class Actor {
   }
   
   tick(delta) {
-    if (this.physicsEnabled && this.body) {
-      this.object3D.position.copy(this.body.position);
-      this.object3D.quaternion.copy(this.body.quaternion);
-    }
+    this.syncCollisionBodyAndRenderable();
   }
   
   destroy() {
@@ -30,12 +29,17 @@ class Actor {
     
   }
   
-  setPosition(x,y,z) {
-    this.object3D.position.set(x,y,z);
-    if (this.body) {
-      this.body.position.set(x,y,z);
-    }
+  syncCollisionBodyAndRenderable () {
+    if (!this.body) return;
+    
+    if (this.physicsEnabled) {
+    this.object3D.position.copy(this.body.position);
+    this.object3D.quaternion.copy(this.body.quaternion);
+  } else if (!this.physicsEnabled) {
+    this.body.position.copy(this.object3D.position);
+    this.body.quaternion.copy(this.object3D.quaternion);
   }
+}
   
 }
 
