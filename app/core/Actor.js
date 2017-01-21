@@ -2,8 +2,14 @@
 
 class Actor {
   constructor() {
-    this.three;
-    this.cannon;
+    // THREE.js
+    this.geometry = null;
+    this.material = null;
+    this.mesh = null;
+    // Cannon.js
+    this.mass = null;
+    this.body = null;
+    this.shape = null;
   }
   
   tick(delta) {

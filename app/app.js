@@ -1,14 +1,16 @@
 /* global WEBVR */
 /* global THREE */
 import Scene1 from './game/Scene1.js';
+import Scene2 from './game/Scene2.js';
 
 
 
 if (WEBVR.isAvailable() === false) {
-  document.body.appendChild(WEBVR.getMessage());
+  // document.body.appendChild(WEBVR.getMessage());
 }
 
 let scene;
+let webGLRenderer;
 let vrRenderer;
 let renderer;
 
@@ -16,37 +18,42 @@ let init = function () {
 	let container = document.createElement('div');
 	document.body.appendChild(container);
 	
-  scene = new Scene1();
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.gammaInput = true;
-  renderer.gammaOutput = true;
-  container.appendChild(renderer.domElement);
-  vrRenderer = new THREE.VREffect(renderer);
+  
+  webGLRenderer = new THREE.WebGLRenderer({ antialias: true });
+  webGLRenderer.setPixelRatio(window.devicePixelRatio);
+  webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+  webGLRenderer.shadowMap.enabled = true;
+  webGLRenderer.gammaInput = true;
+  webGLRenderer.gammaOutput = true;
+  container.appendChild(webGLRenderer.domElement);
   if (WEBVR.isAvailable() === true) {
+    vrRenderer = new THREE.VREffect(webGLRenderer);
     document.body.appendChild(WEBVR.getButton(vrRenderer));
+    renderer = vrRenderer;
+    scene = new Scene1(renderer);
+  } else {
+    renderer = webGLRenderer;
+    scene = new Scene2(renderer);
   }
   
   window.addEventListener('resize', onWindowResize, false);
-}
+};
 
 let tick = function () {
-  vrRenderer.requestAnimationFrame(tick);
+  if (WEBVR.isAvailable() === true) {
+    vrRenderer.requestAnimationFrame(tick);
+  } else {
+    window.requestAnimationFrame(tick);
+  }
   scene.update();
-  vrRenderer.render(scene, scene.camera);
-}
+  renderer.render(scene, scene.camera);
+};
 
 let onWindowResize = function() {
   scene.camera.aspect = window.innerWidth/window.innerHeight;
   scene.camera.updateProjectionMatrix();
-  vrRenderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-let setupSocket = function () {
-  
-}
+  renderer.setSize(window.innerWidth, window.innerHeight);
+};
 
 init();
 tick();
