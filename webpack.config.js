@@ -7,7 +7,7 @@ var htmlConfig = require('./app/config/html.json');
 var config = {
   entry: {
     index: './app/app.js',
-    vendor: ['three', 'cannon', './app/lib/ViveController', './app/lib/VRControls', './app/lib/VREffect', './app/lib/WebVR', './app/lib/OBJLoader', './app/lib/OrbitControls']
+    vendor: ['three', 'cannon', './app/lib/ViveController', './app/lib/VRControls', './app/lib/VREffect', './app/lib/WebVR', './app/lib/OBJLoader', './app/lib/FBXLoader2', './app/lib/OrbitControls']
   },
   output: {
     path: path.resolve(__dirname, 'public'),

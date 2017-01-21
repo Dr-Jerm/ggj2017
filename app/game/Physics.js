@@ -3,20 +3,21 @@ import Actor from '../core/Actor';
 import CANNON from 'cannon';
 
 
-class Sheep extends Actor {
+class Physics extends Actor {
   constructor(scene, world) {
     super();
     
-    this.object3D.scale.set(0.2,0.2,0.2);
+    this.object3D.scale.set(0.008,0.008,0.008);
+    this.object3D.position.set(0,0,0);
     
     var self = this;
     
     
-    var loader = new THREE.OBJLoader();
+    var loader = new THREE.FBXLoader();
     loader.setPath('./models/obj/test_arrow/');
     
     
-    loader.load('test_arrow.obj', function(object) {
+    loader.load('test_arrow.fbx', function(object) {
       var loader = new THREE.TextureLoader();
       loader.setPath('./models/obj/test_arrow/');
       
@@ -59,4 +60,4 @@ class Sheep extends Actor {
   }
 }
 
-module.exports = Sheep;
+module.exports = Physics;
