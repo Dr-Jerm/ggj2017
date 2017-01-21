@@ -4,7 +4,7 @@ import CANNON from 'cannon';
 
 
 class GroundPlane extends Actor {
-  constructor() {
+  constructor(scene, world) {
     super();
     
     this.geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
@@ -19,6 +19,9 @@ class GroundPlane extends Actor {
     this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
     this.body.angularVelocity.set(0,10,0);
     this.body.angularDamping = 0.5;
+    
+    scene.add(this.object3D);
+    world.addBody(this.body);
   }
 }
 

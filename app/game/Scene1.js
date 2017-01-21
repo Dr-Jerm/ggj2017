@@ -55,19 +55,15 @@ class Scene1 extends THREE.Scene {
     controller2 = new Controller(1, this.controls);
     this.add(controller2);
     
-    let skybox = new Skybox();
+    let skybox = new Skybox(this, this.world);
     this.add(skybox.object3D);
     
     // let sheep = new Sheep();
     // this.add(sheep.object3D);
-    let groundPlane = new GroundPlane();
-    this.add(groundPlane.object3D);
-    this.world.add(groundPlane.body);
+    let groundPlane = new GroundPlane(this, this.world);
     
-    let physics = new Physics();
-    physics.object3D.position.set(0,10,0);
-    this.add(physics.object3D);
-    this.world.add(physics.body);
+    let physics = new Physics(this, this.world);
+    physics.object3D.position.set(0,0,0);
   }
   
   tick (delta) {

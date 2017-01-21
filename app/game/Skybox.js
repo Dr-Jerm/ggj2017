@@ -4,7 +4,7 @@ import CANNON from 'cannon';
 
 
 class Sheep extends Actor {
-  constructor() {
+  constructor(scene, world) {
     super();
     
     var self = this;
@@ -25,6 +25,8 @@ class Sheep extends Actor {
       
       self.object3D.add(skybox.clone());
     });
+    
+    scene.add(this.object3D);
   }
 }
 
