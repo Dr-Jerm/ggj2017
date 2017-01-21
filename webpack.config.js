@@ -27,7 +27,8 @@ var config = {
   ],
   module: {
     loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
+      { test: /(\.vert)|(\.frag)$/, exclude: /node_modules/, loader: 'raw-loader'}
     ]
   },
   devtool: "source-map",

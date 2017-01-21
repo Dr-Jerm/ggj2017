@@ -3,6 +3,7 @@
 import Scene1 from './game/Scene1.js';
 
 
+
 if (WEBVR.isAvailable() === false) {
   document.body.appendChild(WEBVR.getMessage());
 }
@@ -14,6 +15,7 @@ let renderer;
 let init = function () {
 	let container = document.createElement('div');
 	document.body.appendChild(container);
+	
   scene = new Scene1();
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -40,6 +42,10 @@ let onWindowResize = function() {
   scene.camera.aspect = window.innerWidth/window.innerHeight;
   scene.camera.updateProjectionMatrix();
   vrRenderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+let setupSocket = function () {
+  
 }
 
 init();

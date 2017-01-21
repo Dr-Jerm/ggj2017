@@ -2,7 +2,6 @@
 /* global THREE */
 import Controller from './vr-controller';
 
-
 class Scene1 extends THREE.Scene {
   constructor() {
     super();
