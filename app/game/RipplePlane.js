@@ -8,15 +8,9 @@ class RipplePlane extends Actor {
   constructor(scene, world) {
     super(scene, world);
     
-    //this.geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
-    //this.geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
-    //this.material = new THREE.MeshLambertMaterial( { color: 0x777777 } );
-    //THREE.ColorUtils.adjustHSV( this.material.color, 0, 0, 0.9 );
-    //this.object3D = new THREE.Mesh( this.geometry, this.material );
-
     this.WIDTH = 64;
     this.NUM_TEXELS = this.WIDTH * this.WIDTH;
-    this.BOUNDS = 512;
+    this.BOUNDS = 10;
     this.BOUNDS_HALF = this.BOUNDS * 0.5;
 
     this.geometry = new THREE.PlaneBufferGeometry(
@@ -79,8 +73,8 @@ class RipplePlane extends Actor {
     this.heightMapVariable.material.uniforms.rippleOrigin = {
       value: new THREE.Vector2(-1, 0)
     };
-    this.heightMapVariable.material.uniforms.rippleSize = { value: 200.0 };
-    this.heightMapVariable.material.uniforms.viscosityConstant = { value: 0.01 };
+    this.heightMapVariable.material.uniforms.rippleSize = { value: 0.15 };
+    this.heightMapVariable.material.uniforms.viscosityConstant = { value: 0.1 };
     this.heightMapVariable.material.defines.BOUNDS = this.BOUNDS.toFixed(1);
 
     var error = this.gpuCompute.init();

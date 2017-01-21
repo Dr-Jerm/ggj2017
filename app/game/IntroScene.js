@@ -4,6 +4,7 @@
 import CANNON from 'cannon';
 import Sheep from './Sheep';
 import Sign from './Sign';
+import RipplePlane from './RipplePlane';
 
 class IntroScene extends THREE.Scene {
   constructor(renderer) {
@@ -11,6 +12,7 @@ class IntroScene extends THREE.Scene {
     this.controls;
     
     renderer.setClearColor(0xf0f0f0, 1);
+    this.renderer = renderer;
 
     this.world = new CANNON.World();
     this.world.gravity.set(0,0,0);
@@ -47,6 +49,7 @@ class IntroScene extends THREE.Scene {
     this.add(light);
   
     this.sheep = new Sheep(this, this.world);
+    this.ripplePlane = new RipplePlane(this, this.world);
     this.signs = [];
     var sign_count = 6;
     for (var i = 0; i < sign_count; i++) {
@@ -60,18 +63,19 @@ class IntroScene extends THREE.Scene {
 
       this.signs[i].object3D.rotation.y = angle;
     }
-    
-  document.body.onkeyup = function(e){
-    if(e.keyCode == 32){
-        console.log("I pressed spacebar");
+      
+    document.body.onkeyup = function(e){
+      if(e.keyCode == 32){
+          console.log("I pressed spacebar");
+      }
     }
-  }
     
   }
   
   tick (delta) {
     this.controls.update();
     this.sheep.tick(delta);
+    this.ripplePlane.tick(delta);
   }
   
 }
