@@ -22,7 +22,7 @@ class Scene2 extends THREE.Scene {
       0.1,
       1000
     );
-    camera.position.z = 100;
+    camera.position.z = 10;
     this.controls = new THREE.OrbitControls( camera, renderer.domElement );
     this.controls.enableZoom = true;
     this.controls.enableDamping = true;
@@ -44,9 +44,9 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
-    let sheep = new Sheep();
-    this.add(sheep.mesh);
-    this.world.addBody(sheep.body);
+    this.sheep = new Sheep();
+    this.add(this.sheep.mesh);
+    this.world.addBody(this.sheep.body);
     
     document.body.onkeyup = function(e){
     if(e.keyCode == 32){
@@ -58,6 +58,7 @@ class Scene2 extends THREE.Scene {
   
   update () {
     this.controls.update();
+    this.sheep.tick();
   }
   
 }

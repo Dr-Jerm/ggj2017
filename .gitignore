@@ -1,4 +1,5 @@
 /node_modules
 /public
+*.sublime-*
 
 .c9
