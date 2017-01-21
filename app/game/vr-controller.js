@@ -6,12 +6,15 @@ class Controller extends THREE.ViveController  {
     super(index);
     
     this.index = index;
+    this.lastPosition = new THREE.Vector3();
+    this.velocity = new THREE.Vector3();
     let self = this;
     
-    this.onTriggerDown = function (event) {
+    this.onTriggerDown = (event) => {
       console.log("triggerDown "+ this.index);
+      window.game.impact(this.position, this.velocity.length());
     };
-    this.onTriggerUp = function (event) {
+    this.onTriggerUp = (event) => {
       console.log("triggerUp "+ this.index);
     };
     
@@ -39,8 +42,14 @@ class Controller extends THREE.ViveController  {
     });
   }
   
-  tick() {
+  tick(delta) {
     this.update();
+    
+    var _currentPosition = this.position;
+    var _diff = _currentPosition.clone().sub(this.lastPosition);
+    this.velocity = _diff.multiplyScalar(delta);
+    
+    this.lastPosition = this.position.clone();
   }
 }
 

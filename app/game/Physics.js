@@ -7,6 +7,8 @@ class Physics extends Actor {
   constructor(scene, world) {
     super(scene, world);
     
+    this.ticks = true;
+    
     this.object3D.scale.set(1.0, 1.0,1.0);
     this.physicsEnabled = true;
     
