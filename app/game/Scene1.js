@@ -65,9 +65,11 @@ class Scene1 extends THREE.Scene {
     // let sheep = new Sheep();
     // this.add(sheep.object3D);
     let groundPlane = new GroundPlane(this, this.world);
+    groundPlane.object3D.position.set(0,1,0);
+    groundPlane.body.position.set(0,1,0);
     
     let physics = new Physics(this, this.world);
-    physics.body.position.set(0,2,0);
+    physics.body.position.set(0,3,0);
     this.tickingActors.push(physics);
     
     document.body.onkeyup = function(e){
@@ -81,7 +83,8 @@ class Scene1 extends THREE.Scene {
   }
   
   tick (delta) {
-    this.world.step(delta);
+    // this.world.step(delta);
+    this.world.step(1/60);
     this.controls.update();
     tickActors(this.tickingActors, delta);
   }

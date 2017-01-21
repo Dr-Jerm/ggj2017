@@ -10,9 +10,12 @@ class Controller extends THREE.ViveController  {
     this.velocity = new THREE.Vector3();
     let self = this;
     
+    
     this.onTriggerDown = (event) => {
       console.log("triggerDown "+ this.index);
-      window.game.impact(this.position, this.velocity.length());
+      var matrix = this.matrixWorld;
+      var worldLocation = new THREE.Vector3().setFromMatrixPosition( matrix );
+      window.game.impact(worldLocation, this.velocity.length());
     };
     this.onTriggerUp = (event) => {
       console.log("triggerUp "+ this.index);
@@ -52,5 +55,12 @@ class Controller extends THREE.ViveController  {
     this.lastPosition = this.position.clone();
   }
 }
+
+let transformPoint = function( vector ) {
+  vector.x = ( vector.x + 1.0 ) / 2.0;
+  vector.y = ( vector.y / 2.0 );
+  vector.z = ( vector.z + 1.0 ) / 2.0;
+  return vector;
+};
 
 module.exports = Controller;
