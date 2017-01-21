@@ -48,10 +48,13 @@ let tick = function () {
     window.requestAnimationFrame(tick);
   }
   let now = new Date().getTime();
-  delta = now - (time || now);
+  delta = (now - (time || now))/1000;
   time = now;
   
-  scene.tick(delta);
+  if (delta > 0) {
+    scene.tick(delta);
+  }
+  
   renderer.render(scene, scene.camera);
 };
 

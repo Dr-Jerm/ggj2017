@@ -54,16 +54,26 @@ class Scene1 extends THREE.Scene {
     this.add(controller1);
     controller2 = new Controller(1, this.controls);
     this.add(controller2);
+    this.tickingActors.push(controller2);
     
     let skybox = new Skybox(this, this.world);
-    this.add(skybox.object3D);
     
     // let sheep = new Sheep();
     // this.add(sheep.object3D);
     let groundPlane = new GroundPlane(this, this.world);
     
     let physics = new Physics(this, this.world);
-    physics.object3D.position.set(0,0,0);
+    physics.setPosition(0,2,0);
+    this.tickingActors.push(physics);
+    
+    document.body.onkeyup = function(e){
+      if(e.keyCode == 32){
+        console.log("I pressed spacebar");
+        var worldPoint = new CANNON.Vec3(0,0,0);
+        var force = new CANNON.Vec3(0,100,0);
+        physics.body.applyImpulse(force,worldPoint);
+      }
+    }
   }
   
   tick (delta) {

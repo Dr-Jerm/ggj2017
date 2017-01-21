@@ -5,41 +5,42 @@ import CANNON from 'cannon';
 
 class Physics extends Actor {
   constructor(scene, world) {
-    super();
+    super(scene, world);
     
-    this.object3D.scale.set(0.008,0.008,0.008);
-    this.object3D.position.set(0,0,0);
+    this.object3D.scale.set(1.0, 1.0,1.0);
+    this.physicsEnabled = true;
     
     var self = this;
     
     
-    var loader = new THREE.FBXLoader();
+    var loader = new THREE.OBJLoader();
     loader.setPath('./models/obj/test_arrow/');
     
     
-    loader.load('test_arrow.fbx', function(object) {
+    loader.load('test_arrow.obj', function(object) {
       var loader = new THREE.TextureLoader();
       loader.setPath('./models/obj/test_arrow/');
       
-      var controller = object.children[0];
-      controller.material.map = loader.load(
+      var mesh = object.children[0];
+      mesh.material.map = loader.load(
         'sheepDiffuseMap.png'
       );
-      controller.material.specularMap = loader.load(
+      mesh.material.specularMap = loader.load(
         'sheepSpecularMap.png'
       );
       
-      self.object3D.add(controller.clone());
+      self.object3D.add(mesh.clone());
+      // self.object3D.position.set(0,2,0);
     });
     
     this.shape = new CANNON.Box(new CANNON.Vec3(1,1,1));
-    this.mass = 1;
+    this.mass = 10;
     this.body = new CANNON.Body({
-      mass: 1
+      mass: this.mass
     });
     this.body.addShape(this.shape);
-    this.body.angularVelocity.set(0,10,0);
-    this.body.angularDamping = 0.5;
+    // this.body.angularVelocity.set(0,10,0);
+    // this.body.angularDamping = 0.5;
     
     
     var material = new THREE.LineBasicMaterial({
@@ -57,6 +58,11 @@ class Physics extends Actor {
     
     scene.add(this.object3D);
     world.addBody(this.body);
+  }
+  
+  tick(delta) {
+    super.tick(delta);
+    
   }
 }
 

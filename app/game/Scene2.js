@@ -47,11 +47,11 @@ class Scene2 extends THREE.Scene {
   
     this.sheep = new Sheep(this, this.world);
     
-    document.body.onkeyup = function(e){
+  document.body.onkeyup = function(e){
     if(e.keyCode == 32){
         console.log("I pressed spacebar");
     }
-}
+  }
     
   }
   

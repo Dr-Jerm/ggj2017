@@ -5,7 +5,7 @@ import CANNON from 'cannon';
 
 class Sheep extends Actor {
   constructor(scene, world) {
-    super();
+    super(scene, world);
     
     var self = this;
     
