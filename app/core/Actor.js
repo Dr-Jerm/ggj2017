@@ -1,7 +1,7 @@
 /* global THREE */
 
 class Actor {
-  constructor() {
+  constructor(scene, world) {
     // THREE.js
     this.geometry = null;
     this.material = null;

@@ -22,7 +22,8 @@ class Scene2 extends THREE.Scene {
       0.1,
       1000
     );
-    camera.position.z = 10;
+    camera.position.y = 10;
+    camera.rotation.z = 10;
     this.controls = new THREE.OrbitControls( camera, renderer.domElement );
     this.controls.enableZoom = true;
     this.controls.enableDamping = true;
@@ -44,9 +45,7 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
-    let sheep = new Sheep();
-    this.add(sheep.object3D);
-    this.world.addBody(sheep.body);
+    this.sheep = new Sheep(this, this.world);
     
     document.body.onkeyup = function(e){
     if(e.keyCode == 32){

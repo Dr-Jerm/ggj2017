@@ -4,12 +4,11 @@ import CANNON from 'cannon';
 
 
 class Sheep extends Actor {
-  constructor() {
-    super();
+  constructor(scene, world) {
+    super(scene, world);
     this.object3D.scale.set(0.1,0.1,0.1);
     
     var self = this;
-    
     
     var loader = new THREE.OBJLoader();
     loader.setPath('./models/obj/sheep-v1/');
@@ -19,15 +18,15 @@ class Sheep extends Actor {
       var loader = new THREE.TextureLoader();
       loader.setPath('./models/obj/sheep-v1/');
       
-      var controller = object.children[0];
-      controller.material.map = loader.load(
+      var sheepMesh = object.children[0];
+      sheepMesh.material.map = loader.load(
         'sheepDiffuseMap.png'
       );
-      controller.material.specularMap = loader.load(
+      sheepMesh.material.specularMap = loader.load(
         'sheepSpecularMap.png'
       );
       
-      self.object3D.add(controller.clone());
+      self.object3D.add(sheepMesh.clone());
     });
     
     this.shape = new CANNON.Box(new CANNON.Vec3(1,1,1));
@@ -44,6 +43,22 @@ class Sheep extends Actor {
 
     this.speed = 0.1;
 
+    scene.add(this.object3D);
+    world.addBody(this.body);
+
+    var material = new THREE.LineBasicMaterial({
+      color: 0x0000ff
+    });
+
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(
+      new THREE.Vector3( 0, 0, 0 ),
+      new THREE.Vector3( 10, 0, 0 )
+    );
+
+    var line = new THREE.Line( geometry, material );
+    this.object3D.add( line );
+
   }
 
   tick()
@@ -51,9 +66,9 @@ class Sheep extends Actor {
     super.tick();
 
     var _targetPos = this.targetPos.clone();
-    var _currentPos = this.mesh.position.clone();
+    var _currentPos = this.object3D.position.clone();
 
-    var _direction = new THREE.Vector3().subVectors(_targetPos,_currentPos).normalize();    
+    var _direction = _targetPos.clone().sub(_currentPos).normalize();    
     var _distance =  _targetPos.distanceTo(_currentPos);
 
     var _velocity = new THREE.Vector3(0,0,0);
@@ -66,14 +81,22 @@ class Sheep extends Actor {
       this.targetPos = this.getNewTargetPos();
     }
 
-    this.mesh.position.add(_velocity);
+    this.object3D.position.add(_velocity);
+
+    /*
+    var dotProd = .clone().dot(_currentPos);
+    _targetPos.mag
+    var _theta = Math.arccos()
+    */
+
+    this.object3D.rotation.y += 0.1;
   }
 
   getNewTargetPos()
   {
       var randX = this.randRange(-10,10);
-      var randY = this.randRange(-10,10);
-      return new THREE.Vector3(randX,randY,0);
+      var randZ = this.randRange(-10,10);
+      return new THREE.Vector3(randX,0,randZ);
   }
 
   randRange(min,max)
