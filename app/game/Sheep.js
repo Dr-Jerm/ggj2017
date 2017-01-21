@@ -6,15 +6,29 @@ import CANNON from 'cannon';
 class Sheep extends Actor {
   constructor() {
     super();
+    this.object3D.scale.set(0.1,0.1,0.1);
     
-    this.geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    for ( var i =0; i < this.geometry.faces.length; i += 2 ) {
-      var hex = 0xff0000;
-      this.geometry.faces[ i ].color.setHex( hex );
-      this.geometry.faces[ i + 1 ].color.setHex( hex );
-    }
-    this.material = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors, overdraw: 0.5} );
-    this.mesh = new THREE.Mesh( this.geometry, this.material );
+    var self = this;
+    
+    
+    var loader = new THREE.OBJLoader();
+    loader.setPath('./models/obj/sheep-v1/');
+    
+    
+    loader.load('sheep.obj', function(object) {
+      var loader = new THREE.TextureLoader();
+      loader.setPath('./models/obj/sheep-v1/');
+      
+      var controller = object.children[0];
+      controller.material.map = loader.load(
+        'sheepDiffuseMap.png'
+      );
+      controller.material.specularMap = loader.load(
+        'sheepSpecularMap.png'
+      );
+      
+      self.object3D.add(controller.clone());
+    });
     
     this.shape = new CANNON.Box(new CANNON.Vec3(1,1,1));
     this.mass = 1;
@@ -25,7 +39,7 @@ class Sheep extends Actor {
     this.body.angularVelocity.set(0,10,0);
     this.body.angularDamping = 0.5;
 
-    this.targetPos = this.getNewTargetPos()
+    this.targetPos = this.getNewTargetPos();
     this.velocity = new THREE.Vector3(0,0,0);
 
     this.speed = 0.1;
@@ -49,7 +63,7 @@ class Sheep extends Actor {
     }
     else
     {
-      this.targetPos = this.getNewTargetPos()
+      this.targetPos = this.getNewTargetPos();
     }
 
     this.mesh.position.add(_velocity);
@@ -59,7 +73,7 @@ class Sheep extends Actor {
   {
       var randX = this.randRange(-10,10);
       var randY = this.randRange(-10,10);
-      return new THREE.Vector3(randX,randY,0)
+      return new THREE.Vector3(randX,randY,0);
   }
 
   randRange(min,max)

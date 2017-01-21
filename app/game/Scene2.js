@@ -44,9 +44,9 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
-    this.sheep = new Sheep();
-    this.add(this.sheep.mesh);
-    this.world.addBody(this.sheep.body);
+    let sheep = new Sheep();
+    this.add(sheep.object3D);
+    this.world.addBody(sheep.body);
     
     document.body.onkeyup = function(e){
     if(e.keyCode == 32){

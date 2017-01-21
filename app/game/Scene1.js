@@ -40,20 +40,9 @@ class Scene1 extends THREE.Scene {
     this.add(this.controller1);
     this.controller2 = new Controller(1, this.controls);
     this.add(this.controller2);
-
-    let geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    for ( var i =0; i < geometry.faces.length; i += 2 ) {
-      var hex = Math.random() * 0xffffff;
-      geometry.faces[ i ].color.setHex( hex );
-      geometry.faces[ i + 1 ].color.setHex( hex );
-    }
-    let material = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors, overdraw: 0.5} );
-    let mesh = new THREE.Mesh( geometry, material );
-    this.add(mesh); 
     
-    
-    // let sheep = new Sheep();
-    // this.add(sheep.mesh);
+    let sheep = new Sheep();
+    this.add(sheep.object3D);
   }
   
   update () {
