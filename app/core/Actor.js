@@ -10,6 +10,7 @@ class Actor {
     this.material = null;
     this.mesh = null;
     this.object3D = new THREE.Object3D();
+    this.object3D.name = this.constructor.name;
     // Cannon.js
     this.physicsEnabled = false;
     this.mass = null;
@@ -57,12 +58,12 @@ class Actor {
     if (!this.body) return;
     
     if (this.physicsEnabled) {
-      this.object3D.position.copy(this.body.position);
-      this.object3D.quaternion.copy(this.body.quaternion);
-    } else if (!this.physicsEnabled) {
-      this.body.position.copy(this.object3D.position);
-      this.body.quaternion.copy(this.object3D.quaternion);
-    }
+    this.object3D.position.copy(this.body.position);
+    this.object3D.position.y = this.object3D.position.y - 1;
+    this.object3D.quaternion.copy(this.body.quaternion);
+  } else if (!this.physicsEnabled) {
+    this.body.position.copy(this.object3D.position);
+    this.body.quaternion.copy(this.object3D.quaternion);
   }
 
   clearLines()
