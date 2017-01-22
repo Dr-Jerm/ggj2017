@@ -66,8 +66,10 @@ class Game extends Actor {
   {
     if(!this.gameOver)
     {
+
       this.score++;
       this.scene.scoreSign.setNumber( this.score );
+      console.log("INCREMENT: ", this.score)
     }
   }
 

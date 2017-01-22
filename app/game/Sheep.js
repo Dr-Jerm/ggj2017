@@ -72,7 +72,7 @@ class Sheep extends Actor {
 
     console.log(this.object3D.position);
 
-    this.wanderRange = 0.5
+    this.wanderRange = 0.2
 
     this.velocity = new THREE.Vector3(0,0,0);
 

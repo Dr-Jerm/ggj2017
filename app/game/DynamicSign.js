@@ -71,6 +71,7 @@ class DynamicSign extends Actor {
   setNumber( value )
   {
     this.number = value;
+    this.changeCanvas();
     if(this.texture)
     {
       this.texture.needsUpdate = true;  
