@@ -26,7 +26,7 @@ class GroundPlane extends Actor {
     // scene.add(this.object3D);
     // world.addBody(this.body);
     
-    this.shape = new CANNON.Box(new CANNON.Vec3(this.physicsScale.x,this.physicsScale.y,this.physicsScale.z));
+    this.shape = new CANNON.Box(new CANNON.Vec3(this.physicsScale.x/2,this.physicsScale.y/2,this.physicsScale.z/2));
     let collisionMesh = new THREE.Mesh(
       new THREE.BoxGeometry( this.physicsScale.x, this.physicsScale.y, this.physicsScale.z),
       new THREE.MeshStandardMaterial( { color: 0x777777, roughness: 1.0, metalness: 0, wireframe: false } )

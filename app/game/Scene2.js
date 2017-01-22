@@ -29,7 +29,7 @@ class Scene2 extends THREE.Scene {
       1000
     );
     camera.position.y = 10;
-    camera.rotation.x = 10;
+    //camera.rotation.x = 10;
     this.controls = new THREE.OrbitControls( camera, renderer.domElement );
     this.controls.enableZoom = true;
     this.controls.enableDamping = true;
@@ -61,22 +61,21 @@ class Scene2 extends THREE.Scene {
     let groundPlane = new GroundPlane(this, this.world);
     groundPlane.object3D.position.set(0,1.7,0);
     groundPlane.body.position.set(0,1.7,0);
-    
-    let physics = new Physics(this, this.world);
-    physics.body.position.set(0,2.8,0);
-    this.tickingActors.push(physics);
   
-    this.endPen = new Pen(this, this.world, new THREE.Vector3(10,0,0));
+    this.pen = new Pen(this, this.world, new THREE.Vector3(3,2.8,2));
 
     this.sign = new DynamicSign(this, this.world);    
-    this.sign.object3D.position.set(10,0,0);
-    this.sign.object3D.scale.set(10,10,10);
+    this.sign.object3D.position.set(-10,0,0);
     this.tickingActors.push(this.sign);
 
-    this.numSheep = 10;
+    this.freezeFrameTimer = 0;
+    this.freezeFrameTime = 0;
+
+    this.numSheep = 50;
     for(var i=0; i<this.numSheep; i++)
     {
-        var sheep = new Sheep(this, this.world);     
+        var sheep = new Sheep(this, this.world);
+        sheep.object3D.position.y = 2.25;
         this.tickingActors.push(sheep);
     }    
     this.sign.setNumSheep( this.numSheep );
@@ -94,13 +93,13 @@ class Scene2 extends THREE.Scene {
             {
                 if(this.tickingActors[i].object3D.name == "Sheep")
                 {
+                    this.tickingActors[i].object3D.position.set(_curPos);
                     this.tickingActors[i].physicsEnabled = !this.tickingActors[i].physicsEnabled;
                 }
 
             }
         }
       }
-
   }
   
   tick (delta) {
@@ -116,7 +115,6 @@ class Scene2 extends THREE.Scene {
   removeSheep()
   {
     this.numSheep--;
-    console.log("LESS SHEEP ", this.numSheep);
     this.sign.setNumSheep( this.numSheep );
   }
 }

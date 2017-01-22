@@ -5,8 +5,9 @@ import Controller from './vr-controller';
 import Game from './Game';
 import Skybox from './Skybox';
 import GroundPlane from './GroundPlane';
-import Physics from './Physics';
+import Pen from './Pen';
 import Sheep from './Sheep';
+import DynamicSign from './DynamicSign';
 
 class Scene1 extends THREE.Scene {
   constructor(renderer) {
@@ -70,16 +71,37 @@ class Scene1 extends THREE.Scene {
     groundPlane.object3D.position.set(0,1.7,0);
     groundPlane.body.position.set(0,1.7,0);
     
-    let physics = new Physics(this, this.world);
-    physics.body.position.set(0,2.8,0);
-    this.tickingActors.push(physics);
+    this.endPen = new Pen(this, this.world, new THREE.Vector3(10,0,0));
+
+    this.sign = new DynamicSign(this, this.world);    
+    this.sign.object3D.position.set(10,0,0);
+    this.sign.object3D.scale.set(10,10,10);
+    this.tickingActors.push(this.sign);
+
+    this.numSheep = 10;
+    for(var i=0; i<this.numSheep; i++)
+    {
+        var sheep = new Sheep(this, this.world);
+        sheep.object3D.position.y = 2.25;
+        this.tickingActors.push(sheep);
+    }    
+    this.sign.setNumSheep( this.numSheep );
+
+    this.bPause = false;
     
     document.body.onkeyup = function(e){
       if(e.keyCode == 32){
         console.log("I pressed spacebar");
         var worldPoint = new CANNON.Vec3(0,0,0);
         var force = new CANNON.Vec3(0,10,0);
-        physics.body.applyImpulse(force,worldPoint);
+        // physics.body.applyImpulse(force,worldPoint);
+        for (let i = 0; i < this.tickingActors.length; i++) 
+        {
+          if(this.tickingActors[i].object3D.name == "Sheep")
+          {
+              this.tickingActors[i].physicsEnabled = !this.tickingActors[i].physicsEnabled;
+          }
+        }
       }
     }
   }
@@ -90,7 +112,12 @@ class Scene1 extends THREE.Scene {
     this.controls.update();
     tickActors(this.tickingActors, delta);
   }
-  
+  removeSheep()
+  {
+    this.numSheep--;
+    console.log("LESS SHEEP ", this.numSheep);
+    this.sign.setNumSheep( this.numSheep );
+  }
 }
 
 let tickActors = function (actors, delta) {

@@ -41,6 +41,11 @@ class Actor {
       return Math.floor(Math.random()*(max-min+1)+min);
   }
 
+  randFloatRange(min,max)
+  {
+      return Math.random()*(max-min+1)+min;
+  }
+
   getPosition()
   {
     return this.object3D.position.clone();
