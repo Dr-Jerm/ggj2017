@@ -115,7 +115,7 @@ class Scene1 extends THREE.Scene {
     }
 
 
-    this.numSheep = 30;
+    this.numSheep = 50;
     for(var i=0; i<this.numSheep; i++)
     {
         var sheep = new Sheep(this, this.world);
@@ -150,8 +150,8 @@ class Scene1 extends THREE.Scene {
     }
   
   tick (delta) {
-    // this.world.step(delta);
-    this.world.step(1/60);
+    this.world.step(delta);
+    //this.world.step(1/60);
     this.controls.update();
     tickActors(this.tickingActors, delta);
   }

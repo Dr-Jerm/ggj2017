@@ -22,7 +22,7 @@ class Game extends Actor {
     
     this.impactConfig = {
       forwardScalar: 2500.0,
-        yBaseForce: 11250.0,
+        yBaseForce: 10000.0,
       maxRange: 2,
       forceThreshold: 1.0
     };
