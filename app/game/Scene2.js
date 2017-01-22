@@ -45,7 +45,7 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
-    this.numSheep = 1;
+    this.numSheep = 10;
     this.herd = [];
     for(var i=0; i<this.numSheep; i++)
     {

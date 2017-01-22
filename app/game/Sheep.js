@@ -16,14 +16,16 @@ class Sheep extends Actor {
     var loader = new THREE.OBJLoader();
     loader.setPath('./models/obj/sheep-v2/');
     
+    var textures = ['sheepDiffuse.png', 'sheepDiffuseBlack.png', 'sheepDiffuseBW.png', 'sheepDiffuseWhite.png']
+    var texIndex = this.randRange(0, textures.length);
     
     loader.load('sheep.obj', function(object) {
       var loader = new THREE.TextureLoader();
       loader.setPath('./models/obj/sheep-v2/');
       
       var sheepMesh = object.children[0];
-      sheepMesh.material.map = loader.load(
-        'sheepDiffuse.png'
+      sheepMesh.material.map = loader.load( 
+        textures[texIndex]
       );
       /*
       sheepMesh.material.specularMap = loader.load(
