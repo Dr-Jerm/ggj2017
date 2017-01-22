@@ -135,16 +135,9 @@ class Sheep extends Actor {
   {
     super.tick(delta);
 
-    this.raycaster.set(this.getPosition().add(new THREE.Vector3(0,1,0)), new THREE.Vector3(0,-1,0));    
-
-    var _ground = window.game.scene.groundPlane.object3D;    
-    var _intersects = this.raycaster.intersectObject(_ground, true)
-    if(!this.physicsEnabled && _intersects.length <= 0)
-    {
-      this.physicsEnabled = true;        
-      this.onGroundTimer = 0;
-    }
-
+    var _currentBodyPos =MathHelpers.cannonVec3ToThreeVec3(this.body.position);
+    _currentBodyPos.add(new THREE.Vector3(0,0.01,0));
+    this.raycaster.set(_currentBodyPos, new THREE.Vector3(0,-0.02,0));    
     this.brain.tick(delta);
     this.updateTransform(delta);   
 
@@ -152,11 +145,36 @@ class Sheep extends Actor {
     {
       this.checkIsInPen(); 
     }
-    
-    if (this.physicsEnabled) {
+
+    var _ground = window.game.scene.groundPlane.object3D;    
+    var _intersects = this.raycaster.intersectObject(_ground, true)
+    if(_intersects.length <= 0)
+    {
+      // walked off the edge
+      if( !this.physicsEnabled )
+      {
+        this.physicsEnabled = true;    
+        this.body.velocity = new CANNON.Vec3(0,0,0);
+        this.body.angularVelocity = new CANNON.Vec3(0,0,0); 
+      }        
+      else
+      {
+        var _currentHeight = this.body.position.clone().y;
+        // If we've fallen off the table, respawn
+        if( _currentHeight <= -2 )
+        {
+          this.body.position.x = this.getRandStart();
+          this.body.position.y = 5;
+          this.body.position.z = this.getRandStart();
+          this.body.velocity = new CANNON.Vec3(0,-.1,0);
+          this.body.angularVelocity = new CANNON.Vec3(0,0,0);
+        }
+      } 
+    }
+    else if(this.physicsEnabled)
+    {
       this.checkIfLanded(delta);
     }
-    //this.drawDebugLines()
   }
   
   checkIfLanded (delta) {
@@ -171,15 +189,21 @@ class Sheep extends Actor {
       if (this.landedTimer >= this.landedMax) {
         this.physicsEnabled = false;
         this.object3D.rotation.set(0,0,0);
+        this.body.velocity = new CANNON.Vec3(0,0,0);
+        this.body.angularVelocity = new CANNON.Vec3(0,0,0); 
+        this.landedTimer = 0;
       }
     }
     this.lastPosition = MathHelpers.cannonVec3ToThreeVec3(this.body.position);
   }
   
   bump (forceVector, sourceVector) {
-    this.landedTimer = 0;
-    this.physicsEnabled = true;
-    this.body.applyImpulse(forceVector,this.body.position.clone());
+    if(!this.bIsInPen)
+    {
+      this.landedTimer = 0;
+      this.physicsEnabled = true;
+      this.body.applyImpulse(forceVector,this.body.position.clone());
+    }
   }
 
   wander(delta)
