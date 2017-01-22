@@ -116,9 +116,21 @@ class Sheep extends Actor {
     if(!this.bIsInPen)
     {
       this.checkIsInPen(); 
-    }    
-
+    }
+    
+    if (this.physicsEnabled) {
+      this.checkIfLanded(delta)
+    }
     //this.drawDebugLines()
+  }
+  
+  checkIfLanded (delta) {
+    
+  }
+  
+  bump (forceVector, sourceVector) {
+    this.physicsEnabled = true;
+    this.body.applyImpulse(forceVector,this.body.position.clone());
   }
 
   wander(delta)

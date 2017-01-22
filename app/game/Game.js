@@ -1,7 +1,8 @@
 /* global THREE */
 import CANNON from 'cannon';
 import MathHelpers from '../util/MathHelpers';
-import Actor from '../core/Actor'
+import Actor from '../core/Actor';
+import Sheep from './Sheep';
 
 class Game extends Actor {
   constructor(scene, world) {
@@ -25,10 +26,12 @@ class Game extends Actor {
     let tickables = this.scene.tickingActors;
     for (let i = 0; i < tickables.length; i++) {
       let ticker = tickables[i];
-      if (!ticker.physicsEnabled || !ticker.body) continue;
+      if (!ticker instanceof Sheep || !ticker.body) continue;
       
       let _objectPos = new THREE.Vector3(ticker.body.position.x, ticker.body.position.y, ticker.body.position.z); //vec3
       let _diff = _objectPos.clone().sub(vector3Location);
+      
+      if (_diff.length() > this.impactConfig.maxRange) continue;
       
       let _distanceScale = Math.abs((_diff.length() / this.impactConfig.maxRange) - 1) * floatScale;
       // _distanceScale = 1/(Math.pow(_distanceScale, 2));
@@ -37,7 +40,10 @@ class Game extends Actor {
       
       let worldPoint = ticker.body.position;
       let force = new CANNON.Vec3(_force.x,Math.abs(_force.y) * this.impactConfig.yScalar,_force.z);
-      ticker.body.applyImpulse(force,worldPoint);
+      if (ticker instanceof Sheep) {
+        ticker.bump(force, vector3Location);
+      }
+      // ticker.body.applyImpulse(force,worldPoint);
     }
   }
   
