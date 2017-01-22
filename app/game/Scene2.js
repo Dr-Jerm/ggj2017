@@ -30,6 +30,8 @@ class Scene2 extends THREE.Scene {
           0.1,
           10000
         );
+        var listener = new THREE.AudioListener();
+		    camera.add( listener );
         camera.position.y = 10;
         //camera.rotation.x = 10;
         this.controls = new THREE.OrbitControls( camera, renderer.domElement );

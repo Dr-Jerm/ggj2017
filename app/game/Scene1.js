@@ -32,6 +32,8 @@ class Scene1 extends THREE.Scene {
       0.1,
       10000
     );
+    var listener = new THREE.AudioListener();
+		camera.add( listener );
     
     this.add(camera);
     
