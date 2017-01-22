@@ -5,7 +5,8 @@ varying vec4 vColor;
 
 uniform vec2 rippleOriginLeft;
 uniform vec2 rippleOriginRight;
-uniform float rippleSize;
+uniform float rippleSizeLeft;
+uniform float rippleSizeRight;
 uniform float falloff;
 
 uniform float timeLeft;
@@ -39,13 +40,13 @@ void main() {
   if ( distLeftSquare < radiusLeftOutside * radiusLeftOutside &&
        distLeftSquare > radiusLeftInside * radiusLeftInside) {
 
-    offsetLeft = vec3(0.0, rippleSize / (falloffLeft * falloffLeft), 0.0);
+    offsetLeft = vec3(0.0, rippleSizeLeft / (falloffLeft * falloffLeft), 0.0);
     colorLeft = vec4(30.0/vec3(falloffLeft * falloffLeft), 0.0);
   }
   if (distRightSquare < radiusRightOutside * radiusRightOutside &&
       distRightSquare > radiusRightInside * radiusRightInside) {
 
-    offsetRight = vec3(0.0, rippleSize / (falloffRight * falloffRight), 0.0);
+    offsetRight = vec3(0.0, rippleSizeRight / (falloffRight * falloffRight), 0.0);
     colorRight = vec4(30.0/vec3(falloffRight * falloffRight), 0.0);
   }
 
