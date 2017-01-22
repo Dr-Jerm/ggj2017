@@ -59,9 +59,11 @@ class Sheep extends Actor {
     });
     this.body.addShape(this.shape);
 
+    this.object3D.position.x = this.randFloatRange(-1,1);
     this.object3D.position.y = 2.8;
+    this.object3D.position.z = this.randFloatRange(-1,1);
 
-    this.wanderRange = 7
+    this.wanderRange = 1
 
     this.targetPos = this.getNewTargetPos(this.wanderRange, this.wanderRange);
     this.velocity = new THREE.Vector3(0,0,0);
@@ -71,8 +73,8 @@ class Sheep extends Actor {
 
     this.grazeTimer = 0;
     this.newDestTimer = 0;
-    this.limitInState = this.randRange(2,5);
-    this.nextDestTimeRange = this.randRange(2,5);
+    this.limitInState = this.randFloatRange(2,5);
+    this.nextDestTimeRange = this.randFloatRange(2,5);
 
     this.destinationRange = 0.2;
 
@@ -82,7 +84,7 @@ class Sheep extends Actor {
     this.maxSpeed = 0.25;
     this.rotationRate = 1;
 
-    this.pen = scene.endPen;
+    this.pen = scene.pen;
 
     this.bIsInPen = false;
 
@@ -99,7 +101,6 @@ class Sheep extends Actor {
       var _dist = _penPos.sub(_sheepPos).length();
       if (_dist < this.pen.radius)
       {
-        console.log("REMOVE ME");
         this.setPenned();        
         this.scene.removeSheep()
       }
@@ -130,7 +131,7 @@ class Sheep extends Actor {
     if( this.newDestTimer > this.nextDestTimeRange )
     {
       this.targetPos = this.getNewTargetPos(this.wanderRange, this.wanderRange);
-      this.nextDestTimeRange = this.randRange(2,5);
+      this.nextDestTimeRange = this.randFloatRange(2,5);
       this.newDestTimer = 0;
     } 
 
@@ -158,13 +159,13 @@ class Sheep extends Actor {
     {
         this.targetPos = this.getNewTargetPos(2, 2);
         this.newDestTimer = 0;
-        this.nextDestTimeRange = this.randRange(2,6);
+        this.nextDestTimeRange = this.randFloatRange(2,6);
     } 
 
     if(this.grazeTimer > this.limitInState)
     {
       this.targetPos = this.getNewTargetPos(2, 2); 
-      this.limitInState = this.randRange(4,8);
+      this.limitInState = this.randFloatRange(4,8);
       this.grazeTimer = 0;
       this.brain.timeInState = 0;
       this.speed = 0;
@@ -176,8 +177,8 @@ class Sheep extends Actor {
     this.bIsInPen = true;
     this.targetPos = this.getPenTargetPos();
     this.newDestTimer = 0;
-    this.nextDestTimeRange = this.randRange(2,6);
-    //this.brain.setState(this.penned.bind(this));
+    this.nextDestTimeRange = this.randFloatRange(2,6);
+    this.brain.setState(this.penned.bind(this));
     this.maxSpeed = this.maxSpeed / 2.0;
   }
 
@@ -187,7 +188,7 @@ class Sheep extends Actor {
     if( this.newDestTimer > this.nextDestTimeRange )
     {
         this.newDestTimer = 0;
-        this.nextDestTimeRange = this.randRange(2,4);
+        this.nextDestTimeRange = this.randFloatRange(2,4);
         this.targetPos = this.getPenTargetPos();
     } 
   }
@@ -265,8 +266,8 @@ class Sheep extends Actor {
   // Return the next target position
   getNewTargetPos(x, z)
   {
-    var randX = this.randRange(-x,x);
-    var randZ = this.randRange(-z,z);
+    var randX = this.randFloatRange(-x,x);
+    var randZ = this.randFloatRange(-z,z);
     var offset = new THREE.Vector3(randX,0,randZ);
     var _currentPos = this.getPosition();
     var newTarget = _currentPos.add(offset);
@@ -274,14 +275,17 @@ class Sheep extends Actor {
   }
 
   // Return the next target position
-  getPenTargetPos(x, z)
+  getPenTargetPos()
   {
     var _penPos = this.pen.getPosition();
-    var _rad = this.pen.radius * 0.66;
-    var randX = this.randRange(-_rad,_rad);
-    var randZ = this.randRange(-_rad,_rad);
+    var _rad = this.pen.radius * 0.33;
+    var randX = this.randFloatRange(-_rad,_rad);
+    var randZ = this.randFloatRange(-_rad,_rad);
     var offset = new THREE.Vector3(randX,0,randZ);
     var newTarget = _penPos.add(offset);
+
+    this.draweLine(_penPos, newTarget, 0x00ff00);
+    
     return newTarget;
   }
 
