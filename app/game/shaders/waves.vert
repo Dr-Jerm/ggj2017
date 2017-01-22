@@ -38,7 +38,7 @@ void main() {
     vec3 offset = vec3(0.0, 1.5, 0.0);
     newPosition = newPosition + offset;
 
-    vColor = vec4(1.0, 1.0, 1.0, 1.0);
+    vColor = vec4(0.0, 0.2, 0.0, 1.0);
   }
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
