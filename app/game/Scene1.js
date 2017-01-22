@@ -90,7 +90,7 @@ class Scene1 extends THREE.Scene {
     this.timeSign.setMessage("Time");
     this.tickingActors.push(this.timeSign);
 
-    this.numSheep = 10;
+    this.numSheep = 100;
     for(var i=0; i<this.numSheep; i++)
     {
         var sheep = new Sheep(this, this.world);

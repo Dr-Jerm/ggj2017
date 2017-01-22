@@ -90,7 +90,7 @@ class Scene2 extends THREE.Scene {
         this.freezeFrameTimer = 0;
         this.freezeFrameTime = 0;
 
-        this.numSheep = 5;
+        this.numSheep = 100;
         for(var i=0; i<this.numSheep; i++)
         {
             var sheep = new Sheep(this, this.world);
