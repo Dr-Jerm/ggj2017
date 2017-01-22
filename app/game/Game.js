@@ -19,7 +19,7 @@ class Game extends Actor {
     this.impactConfig = {
       scalar: 4000.0,
       yScalar: 15.0,
-      maxRange: 3,
+      maxRange: 2,
       forceThreshold: 1.0
     };
     
@@ -70,7 +70,6 @@ class Game extends Actor {
     {
       this.score++;
       this.scene.scoreSign.setNumber( this.score );
-      console.log("INCREMENT: ", this.score)
     }
   }
 
@@ -83,24 +82,22 @@ class Game extends Actor {
 
     if(this.timeRemaining <= 0)
     {
-      this.gameOver = true;
-      this.scene.timeSign.setMessage("Restarting")
-      this.timeRemaining = 10;
+      if(!this.gameOver)
+      {
+        this.gameOver = true;
+        this.scene.timeSign.setMessage("Restarting")
+        this.timeRemaining = 10;
+      }
+      else
+      {
+        window.location.reload(false); 
+      }
     }
   }
   
   tick(delta) {
     super.tick(delta);
-
-
     this.updateTime(delta);
-    if(this.gameStart && !this.gameOver)
-    {
-    }
-    else if(this.gameOver)
-    {
-
-    }
   }
 }
 

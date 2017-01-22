@@ -14,7 +14,7 @@ class Sheep extends Actor {
     loader.setPath('./models/obj/skybox/');
     
     
-    loader.load('skybox.obj', function(object) {
+    loader.load('skysphere.obj', function(object) {
       var loader = new THREE.TextureLoader();
       loader.setPath('./models/obj/skybox/');
       
