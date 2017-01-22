@@ -38,7 +38,7 @@ class RipplePlane extends Actor {
     loader.setPath('./models/obj/island/');
     var self = this;
 
-    loader.load('island_top.obj', function(object) {
+    loader.load('island_2.obj', function(object) {
       var island = object.children[0];
       island.geometry.computeFaceNormals();
       island.geometry.computeVertexNormals();
@@ -81,8 +81,8 @@ class RipplePlane extends Actor {
   }
 
   tick(delta) {
-    this.timeLeft += delta / 10;
-    this.timeRight += delta / 10;
+    this.timeLeft += delta / 2;
+    this.timeRight += delta / 2;
     this.material.uniforms.timeLeft = { 
       type: 'f', 
       value: this.timeLeft
