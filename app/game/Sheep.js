@@ -56,7 +56,7 @@ class Sheep extends Actor {
       new THREE.BoxGeometry( this.physicsScale.x * this.totalScale, this.physicsScale.y * this.totalScale, this.physicsScale.z * this.totalScale),
       new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
     );
-    this.object3D.add(collisionMesh);
+    // this.object3D.add(collisionMesh);
     this.mass = 5;
     this.body = new CANNON.Body({
       mass: this.mass
