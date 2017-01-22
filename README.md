@@ -13,4 +13,7 @@ then
 ```./node_modules/.bin/webpack```
 
 Demo here:
-https://dr-jerm.github.io/SkyShepard/
+https://dr-jerm.github.io/SkyShepherd/
+
+Demo Repo:
+https://github.com/Dr-Jerm/SkyShepherd
