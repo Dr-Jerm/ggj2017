@@ -64,9 +64,10 @@ class IntroScene extends THREE.Scene {
       this.signs[i].object3D.rotation.y = angle;
     }
       
-    document.body.onkeyup = function(e){
+    document.body.onkeyup = (e) => {
       if(e.keyCode == 32){
           console.log("I pressed spacebar");
+          this.ripplePlane.acceptPunch(new THREE.Vector2(0.0, 0.0), "left");
       }
     }
     
