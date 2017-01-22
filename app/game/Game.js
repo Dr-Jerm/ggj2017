@@ -10,8 +10,14 @@ class Game extends Actor {
     this.world = world;
     
     this.score = 0;
-    this.impactScalar = 10000.0;
-    this.impactYScalar = 20.0;
+    
+    this.impactConfig = {
+      scalar: 5000.0,
+      yScalar: 4.0,
+      maxRange: 3
+    };
+    
+    
     
   }
   
@@ -24,12 +30,13 @@ class Game extends Actor {
       let _objectPos = new THREE.Vector3(ticker.body.position.x, ticker.body.position.y, ticker.body.position.z); //vec3
       let _diff = _objectPos.clone().sub(vector3Location);
       
-      let _distanceScale = _diff.length() * floatScale;
+      let _distanceScale = Math.abs((_diff.length() / this.impactConfig.maxRange) - 1) * floatScale;
+      // _distanceScale = 1/(Math.pow(_distanceScale, 2));
       
-      let _force = _diff.clone().normalize().multiplyScalar(_distanceScale).multiplyScalar(this.impactScalar);
+      let _force = _diff.clone().normalize().multiplyScalar(_distanceScale).multiplyScalar(this.impactConfig.scalar);
       
       let worldPoint = ticker.body.position;
-      let force = new CANNON.Vec3(_force.x,Math.abs(_force.y) * this.impactYScalar,_force.z);
+      let force = new CANNON.Vec3(_force.x,Math.abs(_force.y) * this.impactConfig.yScalar,_force.z);
       ticker.body.applyImpulse(force,worldPoint);
     }
   }

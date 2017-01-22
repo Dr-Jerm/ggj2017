@@ -9,10 +9,11 @@ class Physics extends Actor {
     super(scene, world);
     
     this.ticks = true;
+    this.hackyYOffset = 0.56;
     
     // this.object3D.scale.set(1.0, 1.0,1.0);
     this.physicsEnabled = true;
-    this.totalScale = 0.25;
+    this.totalScale = 0.15;
     this.physicsScale = new THREE.Vector3(1.0, 0.7, 0.5);
     
     var self = this;
@@ -34,13 +35,13 @@ class Physics extends Actor {
       //   'sheepSpecularMap.png'
       // );
       
-        let mesh = object.clone();
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        mesh.position.set(0, -0.3*self.totalScale, 0);
-        mesh.scale.set(self.totalScale, self.totalScale, self.totalScale);
-        // mesh.rotation.set(-Math.PI/2, Math.PI,0);
-        self.object3D.add(mesh);
+      let mesh = object.clone();
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      mesh.position.set(0, -0.3*self.totalScale, 0);
+      mesh.scale.set(self.totalScale, self.totalScale, self.totalScale);
+      // mesh.rotation.set(-Math.PI/2, Math.PI,0);
+      self.object3D.add(mesh);
       // self.object3D.position.set(0,2,0);
     });
     
@@ -50,7 +51,7 @@ class Physics extends Actor {
       new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
     );
     this.object3D.add(collisionMesh);
-    this.mass = 10;
+    this.mass = 5;
     this.body = new CANNON.Body({
       mass: this.mass
     });

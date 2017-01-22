@@ -17,6 +17,8 @@ class Actor {
     this.body = null;
     this.shape = null;
     
+    this.hackyYOffset = 0;
+    
     // debug lines
     this.lines = [];
   }
@@ -64,7 +66,7 @@ class Actor {
     
     if (this.physicsEnabled) {
     this.object3D.position.copy(this.body.position);
-    this.object3D.position.y = this.object3D.position.y - (1 * 0.25);
+    this.object3D.position.y = this.object3D.position.y - this.hackyYOffset;
     this.object3D.quaternion.copy(this.body.quaternion);
     } else if (!this.physicsEnabled) {
       this.body.position.copy(this.object3D.position);

@@ -7,9 +7,9 @@ class GroundPlane extends Actor {
   constructor(scene, world) {
     super(scene, world);
     this.physicsScale = {
-      x: 10.0,
-      y: 1.0,
-      z: 10.0
+      x: 2.5,
+      y: 1,
+      z: 2.5
     };
     // this.geometry = new THREE.PlaneGeometry( 2, 2, 1, 1 );
     // //this.geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
