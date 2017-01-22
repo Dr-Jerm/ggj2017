@@ -56,7 +56,7 @@ class Sheep extends Actor {
       new THREE.BoxGeometry( this.physicsScale.x * this.totalScale, this.physicsScale.y * this.totalScale, this.physicsScale.z * this.totalScale),
       new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
     );
-    this.object3D.add(collisionMesh);
+    // this.object3D.add(collisionMesh);
     this.mass = 5;
     this.body = new CANNON.Body({
       mass: this.mass
@@ -127,7 +127,7 @@ class Sheep extends Actor {
       if (_dist < this.pen.radius)
       {
         this.setPenned();        
-        this.scene.removeSheep()
+        window.game.incrementScore();
       }
   }
 
@@ -146,7 +146,7 @@ class Sheep extends Actor {
       this.checkIsInPen(); 
     }
 
-    var _ground = window.game.scene.groundPlane.object3D;    
+    var _ground = window.game.scene.ripplePlane.object3D;    
     var _intersects = this.raycaster.intersectObject(_ground, true)
     if(_intersects.length <= 0)
     {
@@ -383,7 +383,7 @@ class Sheep extends Actor {
   getPenTargetPos()
   {
     var _penPos = this.pen.getPosition();
-    var _rad = this.pen.radius * 0.1;
+    var _rad = this.pen.radius * 0.5;
     var randX = this.randFloatRange(-_rad,_rad);
     var randZ = this.randFloatRange(-_rad,_rad);
     var offset = new THREE.Vector3(randX,0,randZ);

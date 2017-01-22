@@ -9,14 +9,15 @@ class Controller extends THREE.ViveController  {
     this.showViveControllers = false;
     this.lastPosition = new THREE.Vector3();
     this.velocity = new THREE.Vector3();
+    this.isAboveGround = false;
+    this.isBelowGround = true;
     let self = this;
     
     
     this.onTriggerDown = (event) => {
       console.log("triggerDown "+ this.index);
-      var matrix = this.matrixWorld;
-      var worldLocation = new THREE.Vector3().setFromMatrixPosition( matrix );
-      window.game.impact(worldLocation, this.velocity.length(), this.index ? "right" : "left");
+      // var worldLocation = this.getWorldPosition();
+      // window.game.impact(worldLocation, this.velocity.length(), this.index ? "right" : "left");
     };
     this.onTriggerUp = (event) => {
       console.log("triggerUp "+ this.index);
@@ -79,6 +80,35 @@ class Controller extends THREE.ViveController  {
     this.velocity = _diff.multiplyScalar(delta);
     
     this.lastPosition = this.position.clone();
+    
+    this.checkWentBelowGround();
+  }
+  
+  getWorldPosition() {
+    var matrix = this.matrixWorld;
+    return new THREE.Vector3().setFromMatrixPosition( matrix );
+  }
+  
+  checkWentBelowGround() {
+    let raycaster =  new THREE.Raycaster();
+    var worldLocation = this.getWorldPosition();
+    raycaster.set(worldLocation, new THREE.Vector3(0,-1,0));
+    var _ground = window.game.scene.ripplePlane.object3D;    
+    var _intersects = raycaster.intersectObject(_ground, true)
+    if(_intersects.length == 0) {
+      this.isBelowGround = true;
+      
+      if (this.isAboveGround) {
+        let worldLocation = this.getWorldPosition();
+        window.game.impact(worldLocation, this.velocity.length(), this.index ? "right" : "left");
+        console.log("Just went below ground");
+      }
+      this.isAboveGround = false;
+      
+    } else {
+      this.isAboveGround = true;
+      this.isBelowGround = false;
+    }
   }
 }
 
