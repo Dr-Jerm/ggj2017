@@ -58,14 +58,14 @@ class Scene2 extends THREE.Scene {
 
     let skybox = new Skybox(this, this.world);
 
-    let groundPlane = new GroundPlane(this, this.world);
-    groundPlane.object3D.position.set(0,1.7,0);
-    groundPlane.body.position.set(0,1.7,0);
+    this.groundPlane = new GroundPlane(this, this.world);
+    this.groundPlane.object3D.position.set(0,1.7,0);
+    this.groundPlane.body.position.set(0,1.7,0);
   
-    this.pen = new Pen(this, this.world, new THREE.Vector3(3,2.8,2));
+    this.pen = new Pen(this, this.world, new THREE.Vector3(0,2.18,0));
 
     this.sign = new DynamicSign(this, this.world);    
-    this.sign.object3D.position.set(-10,0,0);
+    this.sign.object3D.position.set(-2,0,-5);
     this.tickingActors.push(this.sign);
 
     this.freezeFrameTimer = 0;

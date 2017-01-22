@@ -68,9 +68,9 @@ class Scene1 extends THREE.Scene {
     
     // let sheep = new Sheep();
     // this.add(sheep.object3D);
-    let groundPlane = new GroundPlane(this, this.world);
-    groundPlane.object3D.position.set(0,1.7,0);
-    groundPlane.body.position.set(0,1.7,0);
+    this.groundPlane = new GroundPlane(this, this.world);
+    this.groundPlane.object3D.position.set(0,1.7,0);
+    this.groundPlane.body.position.set(0,1.7,0);
     
     // this.ripplePlane = new RipplePlane(this, this.world);
     // this.tickingActors.push(this.ripplePlane);

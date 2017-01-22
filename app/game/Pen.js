@@ -60,8 +60,9 @@ class Pen extends Actor {
 	    });
 
 		this.object3D.position.set(center.x, center.y, center.z);
-    	this.object3D.scale.set(0.1,0.1,0.1);
-		this.radius = 6 * 0.1;
+		var _scale = 0.05;
+    	this.object3D.scale.set(_scale,_scale,_scale);
+		this.radius = 6 * _scale;
 
 
 	    //this.body.addShape(this.shape);

@@ -61,11 +61,16 @@ class Sheep extends Actor {
     });
     this.body.addShape(this.shape);
 
-    this.object3D.position.x = this.randFloatRange(-1,1);
-    this.object3D.position.y = 2.8;
-    this.object3D.position.z = this.randFloatRange(-1,1);
+    this.pen = scene.pen;
+    this.bIsInPen = false;
 
-    this.wanderRange = 1
+    this.object3D.position.x = this.getRandStart();
+    this.object3D.position.y = 2.8;
+    this.object3D.position.z = this.getRandStart();
+
+    console.log(this.object3D.position);
+
+    this.wanderRange = 0.5
 
     this.velocity = new THREE.Vector3(0,0,0);
 
@@ -79,21 +84,37 @@ class Sheep extends Actor {
 
     this.destinationRange = 0.2;
 
-    this.accel = 0.01;
+    this.accel = 0.005;
     this.speed = 0;
-    //this.maxSpeed = 1.5;
-    this.maxSpeed = 0.25;
+
+    this.maxSpeed = 0.075;
     this.rotationRate = 1;
 
-    this.pen = scene.pen;
-    this.bIsInPen = false;
-
     this.targetPos = this.getNewTargetPos(this.wanderRange, this.wanderRange);
+
+    this.raycaster = new THREE.Raycaster();
 
     scene.add(this.object3D);
     world.addBody(this.body);
 
     this.scene = scene;
+  }
+
+  getRandStart()
+  {
+    var _randValue = Math.random();
+    if( _randValue <= this.pen.radius)
+    {
+      return this.getRandStart();
+    }
+    else if( Math.random() >= 0.5 )
+    {
+      return -_randValue;
+    }
+    else
+    {
+      return _randValue;
+    }
   }
 
   checkIsInPen()
@@ -111,6 +132,16 @@ class Sheep extends Actor {
   tick(delta)
   {
     super.tick(delta);
+
+    this.raycaster.set(this.getPosition().add(new THREE.Vector3(0,1,0)), new THREE.Vector3(0,-1,0));    
+
+    var _ground = window.game.scene.groundPlane.object3D;    
+    var _intersects = this.raycaster.intersectObject(_ground, true)
+    if(!this.physicsEnabled && _intersects.length <= 0)
+    {
+      this.physicsEnabled = true;        
+      this.onGroundTimer = 0;
+    }
 
     this.brain.tick(delta);
     this.updateTransform(delta);   
@@ -292,7 +323,7 @@ class Sheep extends Actor {
 
     var _difference = _penPos.clone().sub(_currentPos);
     var _distance = _difference.length();
-    if(_distance >= 2)
+    if(_distance >= 0.7)
     {
       var randX = this.randFloatRange(-x,x);
       var randZ = this.randFloatRange(-z,z);
