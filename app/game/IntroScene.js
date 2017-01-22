@@ -5,10 +5,12 @@ import CANNON from 'cannon';
 import Sheep from './Sheep';
 import Sign from './Sign';
 import RipplePlane from './RipplePlane';
+import Scene2 from './Scene2';
 
 class IntroScene extends THREE.Scene {
-  constructor(renderer) {
+  constructor(manager) {
     super();
+    let renderer = manager.renderer;
     this.controls;
     
     renderer.setClearColor(0xf0f0f0, 1);
@@ -47,16 +49,36 @@ class IntroScene extends THREE.Scene {
     
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
+
+    this.signs = [];
+    var sign_count = 6;
+    for (var i = 0; i < sign_count; i++) {
+      this.signs[i] = new Sign(this, this.world, i);
+      var angle = -i * 2 * Math.PI / sign_count - Math.PI / 2;
+      this.signs[i].object3D.position.x = 
+        1.25 * Math.cos(i * 2 * Math.PI / sign_count);
+      this.signs[i].object3D.position.z = 
+        1.25 * Math.sin(i * 2 * Math.PI / sign_count);
+
+      this.signs[i].object3D.rotation.y = angle;
+    }
   
-    this.sheep = new Sheep(this, this.world);
+    //this.sheep = new Sheep(this, this.world);
     this.ripplePlane = new RipplePlane(this, this.world);
       
     document.body.onkeyup = (e) => {
       if(e.keyCode == 32){
           console.log("I pressed spacebar");
-          this.ripplePlane.acceptPunch(new THREE.Vector2(0.0, 0.0), "left");
+          this.ripplePlane.acceptPunch(new THREE.Vector2(0.5, 0.0), "left", 0.5);
+      }
+      if(e.keyCode == 13) {
+        console.log("i pressed enter");
+        //var scene2 = new Scene2(this.renderer);
+        //manager.scene = scene2;
+          this.ripplePlane.acceptPunch(new THREE.Vector2(-0.5, 0.0), "right", 0.5);
       }
     }
+
     
   }
   
