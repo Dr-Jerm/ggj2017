@@ -146,7 +146,7 @@ class Sheep extends Actor {
       this.checkIsInPen(); 
     }
 
-    var _ground = window.game.scene.groundPlane.object3D;    
+    var _ground = window.game.scene.ripplePlane.object3D;    
     var _intersects = this.raycaster.intersectObject(_ground, true)
     if(_intersects.length <= 0)
     {

@@ -9,6 +9,7 @@ import GroundPlane from './GroundPlane';
 import Physics from './Physics';
 import Pen from './Pen';
 import DynamicSign from './DynamicSign';
+import RipplePlane from './RipplePlane';
 
 class Scene2 extends THREE.Scene {
   constructor(renderer) {
@@ -64,6 +65,11 @@ class Scene2 extends THREE.Scene {
         this.groundPlane = new GroundPlane(this, this.world);
         this.groundPlane.object3D.position.set(0,1.7,0);
         this.groundPlane.body.position.set(0,1.7,0);
+
+        this.ripplePlane = new RipplePlane(this, this.world);
+        this.tickingActors.push(this.ripplePlane);
+        this.ripplePlane.object3D.position.set(0,2.2,0);
+        this.ripplePlane.object3D.scale.set(0.06,0.06,0.06);
       
         this.pen = new Pen(this, this.world, new THREE.Vector3(0,2.18,0));
 
@@ -128,7 +134,7 @@ class Scene2 extends THREE.Scene {
                 this.raycaster.setFromCamera( this.mouse, this.camera );
 
                 // calculate objects intersecting the picking ray
-                var _intersects = this.raycaster.intersectObject( this.groundPlane.object3D, true );
+                var _intersects = this.raycaster.intersectObject( this.ripplePlane.object3D, true );
                 if(_intersects.length > 0)
                 {
                     var _impactPoint = _intersects[ 0 ].point;
