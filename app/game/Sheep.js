@@ -12,7 +12,9 @@ class Sheep extends Actor {
     //this.object3D.scale.set(0.1,0.1,0.1);
 
     // this.hackyYOffset = 0.56;
-    this.lastPosition = THREE.Vector3();
+    this.lastPosition = new THREE.Vector3();
+    this.landedTimer = 0.0;
+    this.landedMax = 2.0;
     
     this.physicsEnabled = false;
     this.totalScale = 0.075;
@@ -160,15 +162,22 @@ class Sheep extends Actor {
   checkIfLanded (delta) {
     let _currentPosition = MathHelpers.cannonVec3ToThreeVec3(this.body.position);
     
-    // let _diff = _currentPosition.clone()
+    let _diff = _currentPosition.clone().sub(this.lastPosition);
     
+    let velocity = _diff.length() * delta;
     
-    
-    
+    if (velocity < .05) {
+      this.landedTimer += delta;
+      if (this.landedTimer >= this.landedMax) {
+        this.physicsEnabled = false;
+        this.object3D.rotation.set(0,0,0);
+      }
+    }
     this.lastPosition = MathHelpers.cannonVec3ToThreeVec3(this.body.position);
   }
   
   bump (forceVector, sourceVector) {
+    this.landedTimer = 0;
     this.physicsEnabled = true;
     this.body.applyImpulse(forceVector,this.body.position.clone());
   }
