@@ -4,6 +4,7 @@
 import CANNON from 'cannon';
 import Sheep from './Sheep';
 import Game from './Game';
+import SoundManager from './SoundManager';
 import Skybox from './Skybox';
 import GroundPlane from './GroundPlane';
 import Physics from './Physics';
@@ -33,6 +34,9 @@ class Scene2 extends THREE.Scene {
         var listener = new THREE.AudioListener();
 		    camera.add( listener );
         camera.position.y = 10;
+        
+        this.soundManager = new SoundManager(this, this.world);
+        
         //camera.rotation.x = 10;
         this.controls = new THREE.OrbitControls( camera, renderer.domElement );
         this.controls.enableZoom = true;

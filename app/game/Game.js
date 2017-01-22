@@ -59,8 +59,8 @@ class Game extends Actor {
     }
 
     if (this.scene.ripplePlane) {
-
-      this.scene.ripplePlane.acceptPunch(vector3Location, hand, floatScale / 0.001);
+      let impact_amt = (1.0 - (1.0/(Math.abs(floatScale * 1000) + 1)));
+      this.scene.ripplePlane.acceptPunch(vector3Location, hand, impact_amt);
     }
 
   }
