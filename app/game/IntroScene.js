@@ -8,9 +8,8 @@ import RipplePlane from './RipplePlane';
 import Scene2 from './Scene2';
 
 class IntroScene extends THREE.Scene {
-  constructor(manager) {
+  constructor(renderer, manager) {
     super();
-    let renderer = manager.renderer;
     this.controls;
     
     renderer.setClearColor(0xf0f0f0, 1);
@@ -63,7 +62,6 @@ class IntroScene extends THREE.Scene {
       this.signs[i].object3D.rotation.y = angle;
     }
   
-    //this.sheep = new Sheep(this, this.world);
     this.ripplePlane = new RipplePlane(this, this.world);
       
     document.body.onkeyup = (e) => {
@@ -73,18 +71,14 @@ class IntroScene extends THREE.Scene {
       }
       if(e.keyCode == 13) {
         console.log("i pressed enter");
-        //var scene2 = new Scene2(this.renderer);
-        //manager.scene = scene2;
-          this.ripplePlane.acceptPunch(new THREE.Vector2(-0.5, 0.0), "right", 0.5);
+        var scene1 = new Scene1(this.renderer);
+        manager.scene = scene1;
       }
     }
-
-    
   }
   
   tick (delta) {
     this.controls.update();
-    //this.sheep.tick(delta);
     this.ripplePlane.tick(delta);
   }
   
