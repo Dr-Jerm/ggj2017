@@ -99,8 +99,8 @@ class Scene1 extends THREE.Scene {
     this.timeSign.visible = false;
 
     this.signs = [];
-    var sign_count = 6;
-    for (var i = 0; i < sign_count; i++) {
+    var sign_count = 8;
+    for (var i = 0; i < 6; i++) {
       this.signs[i] = new Sign(this, this.world, i);
       var angle = -i * 2 * Math.PI / sign_count - Math.PI / 2;
       this.signs[i].object3D.position.x = 

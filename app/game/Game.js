@@ -16,16 +16,26 @@ class Game extends Actor {
     this.gameStart = false;
     this.gameOver = false;
     
+    this.initialized = false;
+    this.initializedTime = 2.0;
+    this.initializedCount = 0;
+    
     this.impactConfig = {
-      scalar: 4000.0,
-      yScalar: 15.0,
+      forwardScalar: 2500.0,
+        yBaseForce: 11250.0,
       maxRange: 2,
       forceThreshold: 1.0
     };
     
   }
   
-  impact(vector3Location, floatScale, hand) {
+  impact(vector3ImpactLocation, floatScale, hand) {
+    // floatScale = Math.min(floatScale, 0.0015);
+    vector3ImpactLocation.y = 0;
+    
+    if (!this.initialized) return;
+    
+    
     if(!this.gameStart)
     {
       this.scene.beginGame();
@@ -37,30 +47,33 @@ class Game extends Actor {
       let ticker = tickables[i];
       if (!ticker instanceof Sheep || !ticker.body) continue;
       
-      let _objectPos = new THREE.Vector3(ticker.body.position.x, ticker.body.position.y, ticker.body.position.z); //vec3
-      let _diff = _objectPos.clone().sub(vector3Location);
+      let _objectPos = new THREE.Vector3(ticker.body.position.x, 0, ticker.body.position.z); //vec3
+      let _diff = _objectPos.clone().sub(vector3ImpactLocation);
       
       if (_diff.length() > this.impactConfig.maxRange) continue;
       
       let _distanceScale = Math.abs((_diff.length() / this.impactConfig.maxRange) - 1) * floatScale;
       // _distanceScale = 1/(Math.pow(_distanceScale, 2));
       
-      let _force = _diff.clone().normalize().multiplyScalar(_distanceScale).multiplyScalar(this.impactConfig.scalar);
+      // Scale forward force
+      let _force = _diff.clone().normalize().multiplyScalar(_distanceScale).multiplyScalar(this.impactConfig.forwardScalar);
       
-      console.log(_force.length())
+      // Set and scale height
+      _force.y = this.impactConfig.yBaseForce * _distanceScale;
+      console.log("FORCE: ", _force);
+      
+      //console.log(_force.length())
       if (_force.length() < this.impactConfig.forceThreshold) continue;
       
-      let worldPoint = ticker.body.position;
-      let force = new CANNON.Vec3(_force.x,Math.abs(_force.y) * this.impactConfig.yScalar,_force.z);
+      let force = new CANNON.Vec3(_force.x, _force.y,_force.z);
       if (ticker instanceof Sheep) {
-        ticker.bump(force, vector3Location);
+        ticker.bump(force, vector3ImpactLocation);
       }
-      // ticker.body.applyImpulse(force,worldPoint);
     }
 
     if (this.scene.ripplePlane) {
       let impact_amt = (1.0 - (1.0/(Math.abs(floatScale * 1000) + 1)));
-      this.scene.ripplePlane.acceptPunch(vector3Location, hand, impact_amt);
+      this.scene.ripplePlane.acceptPunch(vector3ImpactLocation, hand, impact_amt);
     }
 
   }
@@ -76,6 +89,7 @@ class Game extends Actor {
 
   updateTime(delta)
   {
+    if (!this.gameStart) return; 
     this.timeRemaining -= delta;
     this.timeRemaining = Math.max(0, this.timeRemaining);
     var _secondsRemaining = Math.floor(this.timeRemaining);
@@ -102,6 +116,11 @@ class Game extends Actor {
   tick(delta) {
     super.tick(delta);
     this.updateTime(delta);
+    
+    this.initializedCount += delta;
+    if (this.initializedCount >= this.initializedTime) {
+      this.initialized = true;
+    }
   }
 }
 
