@@ -15,9 +15,13 @@ class Actor {
     this.mass = null;
     this.body = null;
     this.shape = null;
+    
+    // debug lines
+    this.lines = [];
   }
   
   tick(delta) {
+    this.clearLines();
     this.syncCollisionBodyAndRenderable();
   }
   
@@ -53,14 +57,43 @@ class Actor {
     if (!this.body) return;
     
     if (this.physicsEnabled) {
-    this.object3D.position.copy(this.body.position);
-    this.object3D.quaternion.copy(this.body.quaternion);
-  } else if (!this.physicsEnabled) {
-    this.body.position.copy(this.object3D.position);
-    this.body.quaternion.copy(this.object3D.quaternion);
+      this.object3D.position.copy(this.body.position);
+      this.object3D.quaternion.copy(this.body.quaternion);
+    } else if (!this.physicsEnabled) {
+      this.body.position.copy(this.object3D.position);
+      this.body.quaternion.copy(this.object3D.quaternion);
+    }
   }
-}
-  
+
+  clearLines()
+  {
+    for(var i = 0; i < this.lines.length; i++)
+    {
+      this.scene.remove(this.lines[i]);
+    }
+  }
+
+  draweLine(start, end, color)
+  {
+    var material = new THREE.LineBasicMaterial({
+      color: color
+    });
+
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(
+      start,
+      end
+    );
+
+    var _line = new THREE.Line( geometry, material ); 
+    this.lines[this.lines.length] = _line;
+    this.scene.add( _line );
+  }
+
+  clamp(val, min, max)
+  {
+    return Math.min(Math.max(min, val), max)  
+  }  
 }
 
 module.exports = Actor;

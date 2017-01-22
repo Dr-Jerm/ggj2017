@@ -45,8 +45,9 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
+    this.numSheep = 1;
     this.herd = [];
-    for(var i=0; i<10; i++)
+    for(var i=0; i<this.numSheep; i++)
     {
         this.herd[i] = new Sheep(this, this.world);    
     }    
@@ -67,7 +68,7 @@ class Scene2 extends THREE.Scene {
     {
         this.controls.update();
 
-        for(var i=0; i<10; i++)
+        for(var i=0; i<this.numSheep; i++)
         {
             this.herd[i].tick(delta);
         } 

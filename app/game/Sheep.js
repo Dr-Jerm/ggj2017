@@ -1,31 +1,35 @@
 /* global THREE */
 import Actor from '../core/Actor';
 import CANNON from 'cannon';
+import FSM from './FSM';
 
 
 class Sheep extends Actor {
   constructor(scene, world) {
     super(scene, world);
     this.ticks = true;
-    this.object3D.scale.set(0.1,0.1,0.1);
+    //this.object3D.scale.set(0.1,0.1,0.1);
     
     var self = this;
+    this.scene = scene;
     
     var loader = new THREE.OBJLoader();
-    loader.setPath('./models/obj/sheep-v1/');
+    loader.setPath('./models/obj/sheep-v2/');
     
     
     loader.load('sheep.obj', function(object) {
       var loader = new THREE.TextureLoader();
-      loader.setPath('./models/obj/sheep-v1/');
+      loader.setPath('./models/obj/sheep-v2/');
       
       var sheepMesh = object.children[0];
       sheepMesh.material.map = loader.load(
-        'sheepDiffuseMap.png'
+        'sheepDiffuse.png'
       );
+      /*
       sheepMesh.material.specularMap = loader.load(
         'sheepSpecularMap.png'
       );
+*/
       
       self.object3D.add(sheepMesh.clone());
     });
@@ -39,46 +43,71 @@ class Sheep extends Actor {
     this.body.angularVelocity.set(0,10,0);
     this.body.angularDamping = 0.5;
 
-    this.targetPos = this.getNewTargetPos();
+    this.targetPos = this.getNewTargetPos(10, 10);
     this.velocity = new THREE.Vector3(0,0,0);
 
-    this.speed = 1.5;
-    this.rotationRate = 1.5;
+    this.brain = new FSM();
+    this.brain.setState(this.wander.bind(this));    
+
+    this.grazeTime = 0;
+    this.timeOutTime = 10;
+    this.limitInState = this.randRange(2,5);
+
+    this.destinationRange = 0.2;
+
+    this.accel = 0.01;
+    this.speed = 0;
+    this.maxSpeed = 1.0;
+    this.rotationRate = 1;
 
     scene.add(this.object3D);
     world.addBody(this.body);
 
-    /*
-    var material = new THREE.LineBasicMaterial({
-      color: 0x0000ff
-    });
-
-    var geometry = new THREE.Geometry();
-    geometry.vertices.push(
-      new THREE.Vector3( 0, 0, 0 ),
-      new THREE.Vector3( 10, 0, 0 )
-    );
-
-    this.line = new THREE.Line( geometry, material );
-    this.line1 = new THREE.Line( geometry, material );
-    //this.object3D.add( line );
-    scene.add( this.line );
-    scene.add( this.line1 );
-    */
-
     this.scene = scene;
   }
-
-
 
   tick(delta)
   {
     super.tick(delta);
 
+    this.brain.tick(delta);
     this.updateTransform(delta);    
 
-
     //this.drawDebugLines()
+  }
+
+  wander(delta)
+  {
+    var _currentPos = this.object3D.position.clone();
+    var _targetPos = this.targetPos.clone();
+    var _distance =  _targetPos.distanceTo(_currentPos);    
+    if(_distance <= this.destinationRange)
+    {
+      this.speed = 0;
+      this.brain.setState(this.graze.bind(this));
+    }
+  }
+
+  graze(delta)
+  {
+    var _currentPos = this.object3D.position.clone();
+    var _targetPos = this.targetPos.clone();
+    // We're Grazing
+    var _distance =  _targetPos.distanceTo(_currentPos);    
+    if(_distance <= this.destinationRange)
+    {
+      this.grazeTime += delta;
+      this.speed = 0;
+    }
+
+    if(this.grazeTime > this.limitInState || this.brain.timeInState > this.timeOutTime)
+    {
+      this.targetPos = this.getNewTargetPos(2, 2); 
+      this.limitInState = this.randRange(2,5);
+      this.grazeTime = 0;
+      this.brain.timeInState = 0;
+      this.speed = 0;
+    }
   }
 
   updateTransform(delta)
@@ -115,7 +144,13 @@ class Sheep extends Actor {
     var _angleDif = _yaw - _destTheta;
     var _absDif = Math.abs(_angleDif);   
     
-    var _finalRotRate = this.rotationRate * delta;
+    var _finalRotRate = this.rotationRate;      
+    if( this.brain.timeInState > 8 )
+    {
+      _finalRotRate = 2;
+    }
+
+    _finalRotRate = _finalRotRate * delta;
     if(_angleDif > 0.0 && _absDif <= Math.PI)
     {
         _finalRotRate *= -1;  
@@ -133,24 +168,23 @@ class Sheep extends Actor {
     // Update Position
     var _distance =  _targetPos.distanceTo(_currentPos);
     var _velocity = new THREE.Vector3(0,0,0);
-    if(_distance > this.speed)
+    if(_distance > this.destinationRange)
     {
-      _velocity = _fwdVect.clone().multiplyScalar(this.speed);
-      _velocity.multiplyScalar(delta);
+      this.speed += this.accel;
     }
-    else
-    {
-      this.targetPos = this.getNewTargetPos();
-    }
+
+    this.clamp(this.speed, 0, this.maxSpeed);
+    _velocity = _fwdVect.clone().multiplyScalar(this.speed);
+    _velocity.multiplyScalar(delta);
 
     this.object3D.position.add(_velocity);
   }
 
   // Return the next target position
-  getNewTargetPos()
+  getNewTargetPos(x, z)
   {
-      var randX = this.randRange(-5,5);
-      var randZ = this.randRange(-5,5);
+      var randX = this.randRange(-x,x);
+      var randZ = this.randRange(-z,z);
       return new THREE.Vector3(randX,0,randZ);
       //return new THREE.Vector3(1,0,-1);
   }
@@ -164,19 +198,8 @@ class Sheep extends Actor {
     var _fwdVect = this.getForwardVector();
     _fwdVect.add(_currentPos);
 
-    var geometry = new THREE.Geometry();
-    geometry.vertices.push(
-      _currentPos,
-      _fwdVect
-    );
-    this.line.geometry = geometry;
-
-    var geometry1 = new THREE.Geometry();
-    geometry.vertices.push(
-      _currentPos,
-      _targetPos
-    );
-    this.line1.geometry = geometry;
+    this.draweLine(_currentPos, _targetPos, 0x00ff00);
+    this.draweLine(_currentPos, _fwdVect, 0x0000ff);
   }
 
 }
