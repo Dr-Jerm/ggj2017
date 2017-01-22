@@ -16,7 +16,7 @@ class Sheep extends Actor {
     var loader = new THREE.OBJLoader();
     loader.setPath('./models/obj/sheep-v2/');
     
-    var textures = ['sheepDiffuse.png', 'sheepDiffuseBlack.png', 'sheepDiffuseBW.png', 'sheepDiffuseWhite.png']
+    var textures = ['sheepDiffuse.png', 'sheepDiffuseBlack.png', 'sheepDiffuseBW.png', 'sheepDiffuseWhite.png', 'sheepDiffuseZombie.png']
     var texIndex = this.randRange(0, textures.length - 1);
 
     loader.load('sheep.obj', function(object) {
@@ -65,10 +65,27 @@ class Sheep extends Actor {
     this.maxSpeed = 1.5;
     this.rotationRate = 1;
 
+    this.pen = scene.endPen;
+
+    this.bIsInPen = false;
+
     scene.add(this.object3D);
     world.addBody(this.body);
 
     this.scene = scene;
+  }
+
+  checkIsInPen()
+  {
+      var _sheepPos = this.getPosition();
+      var _penPos = this.pen.getPosition()
+      var _dist = _penPos.sub(_sheepPos).length();
+      if (_dist < this.pen.radius)
+      {
+        console.log("REMOVE ME");
+        this.setPenned();        
+        this.scene.removeSheep()
+      }
   }
 
   tick(delta)
@@ -76,14 +93,19 @@ class Sheep extends Actor {
     super.tick(delta);
 
     this.brain.tick(delta);
-    this.updateTransform(delta);    
+    this.updateTransform(delta);   
 
-    //this.drawDebugLines()
+    if(!this.bIsInPen)
+    {
+      this.checkIsInPen(); 
+    }    
+
+    this.drawDebugLines()
   }
 
   wander(delta)
   {
-    var _currentPos = this.object3D.position.clone();
+    var _currentPos = this.getPosition();
     var _targetPos = this.targetPos.clone();
     var _distance =  _targetPos.distanceTo(_currentPos);  
 
@@ -104,7 +126,7 @@ class Sheep extends Actor {
 
   graze(delta)
   {
-    var _currentPos = this.object3D.position.clone();
+    var _currentPos = this.getPosition();
     var _targetPos = this.targetPos.clone();
     // We're Grazing
     var _distance =  _targetPos.distanceTo(_currentPos);    
@@ -132,10 +154,31 @@ class Sheep extends Actor {
     }
   }
 
+  setPenned()
+  {
+    this.bIsInPen = true;
+    this.targetPos = this.getPenTargetPos();
+    this.newDestTimer = 0;
+    this.nextDestTimeRange = this.randRange(2,6);
+    this.brain.setState(this.penned.bind(this));
+    this.maxSpeed = this.maxSpeed / 2.0;
+  }
+
+  penned(delta)
+  {
+    this.newDestTimer += delta;
+    if( this.newDestTimer > this.nextDestTimeRange )
+    {
+        this.newDestTimer = 0;
+        this.nextDestTimeRange = this.randRange(2,4);
+        this.targetPos = this.getPenTargetPos();
+    } 
+  }
+
   updateTransform(delta)
   {
     var _targetPos = this.targetPos.clone();
-    var _currentPos = this.object3D.position.clone();
+    var _currentPos = this.getPosition();
 
     // Handle Position
     var _fwdVect = this.getForwardVector();
@@ -205,20 +248,31 @@ class Sheep extends Actor {
   // Return the next target position
   getNewTargetPos(x, z)
   {
-      var randX = this.randRange(-x,x);
-      var randZ = this.randRange(-z,z);
-      var offset = new THREE.Vector3(randX,0,randZ);
-      var _currentPos = this.object3D.position.clone();
-      var newTarget = _currentPos.add(offset);
-      return newTarget;
-      //return new THREE.Vector3(1,0,-1);
+    var randX = this.randRange(-x,x);
+    var randZ = this.randRange(-z,z);
+    var offset = new THREE.Vector3(randX,0,randZ);
+    var _currentPos = this.getPosition();
+    var newTarget = _currentPos.add(offset);
+    return newTarget;
+  }
+
+  // Return the next target position
+  getPenTargetPos(x, z)
+  {
+    var _penPos = this.pen.getPosition();
+    var _rad = this.pen.radius * 0.66;
+    var randX = this.randRange(-_rad,_rad);
+    var randZ = this.randRange(-_rad,_rad);
+    var offset = new THREE.Vector3(randX,0,randZ);
+    var newTarget = _penPos.add(offset);
+    return newTarget;
   }
 
   // Draw forward and destination lines
   drawDebugLines()
   {
     var _targetPos = this.targetPos.clone();
-    var _currentPos = this.object3D.position.clone();
+    var _currentPos = this.getPosition();
 
     var _fwdVect = this.getForwardVector();
     _fwdVect.add(_currentPos);

@@ -22,23 +22,6 @@ class Pen extends Actor {
 	    console.log(center);
 
 	}
-
-  	tick(delta)
-  	{
-    	super.tick(delta);
-    	var _herd = this.scene.herd;
-
-	    for(var i=0; i<_herd.length; i++)
-	    {
-	        var _sheepPos = _herd[i].getPosition();
-    		var _penPos = this.getPosition()
-	        var _dist = _penPos.sub(_sheepPos).length();
-	        if (_dist < this.radius)
-	        {
-	        	_herd.splice(i, 1);
-	        }
-	    }    
-	}
 }
 
 module.exports = Pen;

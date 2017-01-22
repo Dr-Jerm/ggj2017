@@ -4,6 +4,7 @@
 import CANNON from 'cannon';
 import Sheep from './Sheep';
 import Pen from './Pen';
+import DynamicSign from './DynamicSign';
 
 class Scene2 extends THREE.Scene {
   constructor(renderer) {
@@ -46,24 +47,27 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
-    this.startPen = new Pen(this, this.world, new THREE.Vector3(0,0,0));
     this.endPen = new Pen(this, this.world, new THREE.Vector3(10,0,0));
 
-    this.numSheep = 10;
+    this.sign = new DynamicSign(this, this.world);    
+    this.sign.object3D.scale.set(10,10,10);
+
+    this.numSheep = 20;
     this.herd = [];
     for(var i=0; i<this.numSheep; i++)
     {
-        this.herd[i] = new Sheep(this, this.world);    
+        this.herd[i] = new Sheep(this, this.world);          
     }    
+    this.sign.setNumSheep( this.numSheep );
 
     this.bPause = false;
     
-  document.body.onkeyup = (e)=>{
-    if(e.keyCode == 32){
-        console.log("I pressed spacebar");
-        this.bPause = !this.bPause;
-    }
-  }
+      document.body.onkeyup = (e)=>{
+        if(e.keyCode == 32){
+            console.log("I pressed spacebar");
+            this.bPause = !this.bPause;
+        }
+      }
     
   }
   
@@ -77,8 +81,15 @@ class Scene2 extends THREE.Scene {
             this.herd[i].tick(delta);
         } 
 
-        this.endPen.tick(delta);
+        this.sign.tick(delta);
     }    
+  }
+
+  removeSheep()
+  {
+    this.numSheep--;
+    console.log("LESS SHEEP ", this.numSheep);
+    this.sign.setNumSheep( this.numSheep );
   }
   
 }
