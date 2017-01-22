@@ -26,6 +26,8 @@ class Scene1 extends THREE.Scene {
     this.world.broadphase = new CANNON.NaiveBroadphase();
     this.world.solver.iterations = 10;
     
+    this.offsety = 1.5;
+
     let camera = new THREE.PerspectiveCamera(
       70,
       window.innerWidth/window.innerHeight,
@@ -72,18 +74,18 @@ class Scene1 extends THREE.Scene {
     // let sheep = new Sheep();
     // this.add(sheep.object3D);
     this.groundPlane = new GroundPlane(this, this.world);
-    this.groundPlane.object3D.position.set(0,1.7,0);
-    this.groundPlane.body.position.set(0,1.7,0);
+    this.groundPlane.object3D.position.set(0,1.7 - this.offsety,0);
+    this.groundPlane.body.position.set(0,1.7 - this.offsety,0);
     
     this.ripplePlane = new RipplePlane(this, this.world);
     this.tickingActors.push(this.ripplePlane);
-    this.ripplePlane.object3D.position.set(0,2.2,0);
+    this.ripplePlane.object3D.position.set(0,2.2 - this.offsety,0);
     this.ripplePlane.object3D.scale.set(0.06,0.06,0.06);
     
-    this.pen = new Pen(this, this.world, new THREE.Vector3(0,2.18,0));
+    this.pen = new Pen(this, this.world, new THREE.Vector3(0,2.18 - this.offsety,0));
 
     this.scoreSign = new DynamicSign(this, this.world);    
-    this.scoreSign.object3D.position.set(-2.2,0,-5);   
+    this.scoreSign.object3D.position.set(-2.2,0 - this.offsety,-5);   
     this.scoreSign.object3D.rotation.y = 0.3
     this.scoreSign.setMessage("Score");
     this.scoreSign.setNumber( 0 );
@@ -91,7 +93,7 @@ class Scene1 extends THREE.Scene {
     this.scoreSign.visible = false;
 
     this.timeSign = new DynamicSign(this, this.world);    
-    this.timeSign.object3D.position.set(2.5,0,-5);
+    this.timeSign.object3D.position.set(2.5,0 - this.offsety,-5);
     this.timeSign.object3D.rotation.y = -0.2
     this.timeSign.setMessage("Time");
     this.timeSign.setNumber(window.game.timeRemaining);
@@ -108,6 +110,7 @@ class Scene1 extends THREE.Scene {
       this.signs[i].object3D.position.z = 
         8 * Math.sin(i * 2 * Math.PI / sign_count);
 
+        this.signs[i].object3D.position.y = - this.offsety;
       this.signs[i].object3D.rotation.y = angle;
     }
 
@@ -116,11 +119,12 @@ class Scene1 extends THREE.Scene {
     for(var i=0; i<this.numSheep; i++)
     {
         var sheep = new Sheep(this, this.world);
-        sheep.object3D.position.y = 2.23;
+        sheep.object3D.position.y = 2.23- this.offsety;
         this.tickingActors.push(sheep);
     }    
 
     this.bPause = false;
+
     
     document.body.onkeyup = function(e){
       if(e.keyCode == 32){
