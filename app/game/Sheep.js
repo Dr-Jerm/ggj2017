@@ -17,8 +17,8 @@ class Sheep extends Actor {
     loader.setPath('./models/obj/sheep-v2/');
     
     var textures = ['sheepDiffuse.png', 'sheepDiffuseBlack.png', 'sheepDiffuseBW.png', 'sheepDiffuseWhite.png']
-    var texIndex = this.randRange(0, textures.length);
-    
+    var texIndex = this.randRange(0, textures.length - 1);
+
     loader.load('sheep.obj', function(object) {
       var loader = new THREE.TextureLoader();
       loader.setPath('./models/obj/sheep-v2/');
@@ -45,21 +45,24 @@ class Sheep extends Actor {
     this.body.angularVelocity.set(0,10,0);
     this.body.angularDamping = 0.5;
 
-    this.targetPos = this.getNewTargetPos(10, 10);
+    this.wanderRange = 7
+
+    this.targetPos = this.getNewTargetPos(this.wanderRange, this.wanderRange);
     this.velocity = new THREE.Vector3(0,0,0);
 
     this.brain = new FSM();
     this.brain.setState(this.wander.bind(this));    
 
-    this.grazeTime = 0;
-    this.timeOutTime = 10;
+    this.grazeTimer = 0;
+    this.newDestTimer = 0;
     this.limitInState = this.randRange(2,5);
+    this.nextDestTimeRange = this.randRange(2,5);
 
     this.destinationRange = 0.2;
 
     this.accel = 0.01;
     this.speed = 0;
-    this.maxSpeed = 1.0;
+    this.maxSpeed = 1.5;
     this.rotationRate = 1;
 
     scene.add(this.object3D);
@@ -82,7 +85,16 @@ class Sheep extends Actor {
   {
     var _currentPos = this.object3D.position.clone();
     var _targetPos = this.targetPos.clone();
-    var _distance =  _targetPos.distanceTo(_currentPos);    
+    var _distance =  _targetPos.distanceTo(_currentPos);  
+
+    this.newDestTimer += delta;
+    if( this.newDestTimer > this.nextDestTimeRange )
+    {
+      this.targetPos = this.getNewTargetPos(this.wanderRange, this.wanderRange);
+      this.nextDestTimeRange = this.randRange(2,5);
+      this.newDestTimer = 0;
+    } 
+
     if(_distance <= this.destinationRange)
     {
       this.speed = 0;
@@ -98,15 +110,23 @@ class Sheep extends Actor {
     var _distance =  _targetPos.distanceTo(_currentPos);    
     if(_distance <= this.destinationRange)
     {
-      this.grazeTime += delta;
+      this.grazeTimer += delta;
       this.speed = 0;
     }
 
-    if(this.grazeTime > this.limitInState || this.brain.timeInState > this.timeOutTime)
+    this.newDestTimer += delta;
+    if( this.newDestTimer > this.nextDestTimeRange )
+    {
+        this.targetPos = this.getNewTargetPos(2, 2);
+        this.newDestTimer = 0;
+        this.nextDestTimeRange = this.randRange(2,6);
+    } 
+
+    if(this.grazeTimer > this.limitInState)
     {
       this.targetPos = this.getNewTargetPos(2, 2); 
-      this.limitInState = this.randRange(2,5);
-      this.grazeTime = 0;
+      this.limitInState = this.randRange(4,8);
+      this.grazeTimer = 0;
       this.brain.timeInState = 0;
       this.speed = 0;
     }
@@ -147,7 +167,7 @@ class Sheep extends Actor {
     var _absDif = Math.abs(_angleDif);   
     
     var _finalRotRate = this.rotationRate;      
-    if( this.brain.timeInState > 8 )
+    if( this.brain.timeInState > 6 )
     {
       _finalRotRate = 2;
     }
@@ -175,7 +195,7 @@ class Sheep extends Actor {
       this.speed += this.accel;
     }
 
-    this.clamp(this.speed, 0, this.maxSpeed);
+    this.speed = this.clamp(this.speed, 0, this.maxSpeed);
     _velocity = _fwdVect.clone().multiplyScalar(this.speed);
     _velocity.multiplyScalar(delta);
 
@@ -187,7 +207,10 @@ class Sheep extends Actor {
   {
       var randX = this.randRange(-x,x);
       var randZ = this.randRange(-z,z);
-      return new THREE.Vector3(randX,0,randZ);
+      var offset = new THREE.Vector3(randX,0,randZ);
+      var _currentPos = this.object3D.position.clone();
+      var newTarget = _currentPos.add(offset);
+      return newTarget;
       //return new THREE.Vector3(1,0,-1);
   }
 

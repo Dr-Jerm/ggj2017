@@ -3,6 +3,7 @@
 
 import CANNON from 'cannon';
 import Sheep from './Sheep';
+import Pen from './Pen';
 
 class Scene2 extends THREE.Scene {
   constructor(renderer) {
@@ -45,6 +46,9 @@ class Scene2 extends THREE.Scene {
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
   
+    this.startPen = new Pen(this, this.world, new THREE.Vector3(0,0,0));
+    this.endPen = new Pen(this, this.world, new THREE.Vector3(10,0,0));
+
     this.numSheep = 10;
     this.herd = [];
     for(var i=0; i<this.numSheep; i++)
@@ -68,10 +72,12 @@ class Scene2 extends THREE.Scene {
     {
         this.controls.update();
 
-        for(var i=0; i<this.numSheep; i++)
+        for(var i=0; i<this.herd.length; i++)
         {
             this.herd[i].tick(delta);
         } 
+
+        this.endPen.tick(delta);
     }    
   }
   

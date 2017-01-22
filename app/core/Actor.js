@@ -38,6 +38,11 @@ class Actor {
       return Math.floor(Math.random()*(max-min+1)+min);
   }
 
+  getPosition()
+  {
+    return this.object3D.position.clone();
+  }
+
   getForwardVector()
   {
     var _currentPos = this.object3D.position.clone();
