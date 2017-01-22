@@ -27,7 +27,8 @@ class RipplePlane extends Actor {
           rippleOriginRight: { type: '2fv', value: new THREE.Vector2(1000, 1000) },
           timeLeft: { type: 'f', value: 0 },
           timeRight: { type: 'f', value: 0 },
-          rippleSize: { type: 'f', value: 0 }
+          rippleSize: { type: 'f', value: 400.0 },
+          falloff: { type: 'f', value: 10.0 }
         },
       vertexShader: waves_vert,
       fragmentShader: waves_frag
