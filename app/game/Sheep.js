@@ -9,6 +9,12 @@ class Sheep extends Actor {
     super(scene, world);
     this.ticks = true;
     //this.object3D.scale.set(0.1,0.1,0.1);
+
+    this.hackyYOffset = 0.56;
+    
+    this.physicsEnabled = false;
+    this.totalScale = 0.15;
+    this.physicsScale = new THREE.Vector3(1.0, 0.7, 0.5);
     
     var self = this;
     this.scene = scene;
@@ -32,18 +38,28 @@ class Sheep extends Actor {
         'sheepSpecularMap.png'
       );
 */
-      
-      self.object3D.add(sheepMesh.clone());
+      let mesh = object.clone();
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      mesh.position.set(0, -0.3*self.totalScale, 0);
+      mesh.scale.set(self.totalScale, self.totalScale, self.totalScale);
+      // mesh.rotation.set(-Math.PI/2, Math.PI,0);
+      self.object3D.add(mesh);
     });
     
-    this.shape = new CANNON.Box(new CANNON.Vec3(1,1,1));
-    this.mass = 1;
+    this.shape = new CANNON.Box(new CANNON.Vec3(this.physicsScale.x * this.totalScale,this.physicsScale.y * this.totalScale,this.physicsScale.z * this.totalScale));
+    let collisionMesh = new THREE.Mesh(
+      new THREE.BoxGeometry( this.physicsScale.x * this.totalScale, this.physicsScale.y * this.totalScale, this.physicsScale.z * this.totalScale),
+      new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
+    );
+    this.object3D.add(collisionMesh);
+    this.mass = 5;
     this.body = new CANNON.Body({
-      mass: 1
+      mass: this.mass
     });
     this.body.addShape(this.shape);
-    this.body.angularVelocity.set(0,10,0);
-    this.body.angularDamping = 0.5;
+
+    this.object3D.position.y = 2.8;
 
     this.wanderRange = 7
 
@@ -62,7 +78,8 @@ class Sheep extends Actor {
 
     this.accel = 0.01;
     this.speed = 0;
-    this.maxSpeed = 1.5;
+    //this.maxSpeed = 1.5;
+    this.maxSpeed = 0.25;
     this.rotationRate = 1;
 
     this.pen = scene.endPen;
@@ -100,7 +117,7 @@ class Sheep extends Actor {
       this.checkIsInPen(); 
     }    
 
-    this.drawDebugLines()
+    //this.drawDebugLines()
   }
 
   wander(delta)
@@ -160,7 +177,7 @@ class Sheep extends Actor {
     this.targetPos = this.getPenTargetPos();
     this.newDestTimer = 0;
     this.nextDestTimeRange = this.randRange(2,6);
-    this.brain.setState(this.penned.bind(this));
+    //this.brain.setState(this.penned.bind(this));
     this.maxSpeed = this.maxSpeed / 2.0;
   }
 
