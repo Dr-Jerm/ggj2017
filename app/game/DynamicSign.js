@@ -59,7 +59,16 @@ class DynamicSign extends Actor {
     this.ctx.fillText(this.number, this. canvas.width / 2, this.canvas.height / (1.5));
   }
 
-  setNumSheep( value )
+  setMessage( value )
+  {
+    this.message = value;
+    if(this.texture)
+    {
+      this.texture.needsUpdate = true;  
+    }    
+  }
+
+  setNumber( value )
   {
     this.number = value;
     if(this.texture)

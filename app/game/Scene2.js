@@ -67,9 +67,19 @@ class Scene2 extends THREE.Scene {
       
         this.pen = new Pen(this, this.world, new THREE.Vector3(0,2.18,0));
 
-        this.sign = new DynamicSign(this, this.world);    
-        this.sign.object3D.position.set(-2,0,-5);
-        this.tickingActors.push(this.sign);
+        this.scoreSign = new DynamicSign(this, this.world);    
+        this.scoreSign.object3D.position.set(-2.2,0,-5);   
+        this.scoreSign.object3D.rotation.y = 0.3
+        this.scoreSign.setMessage("Score");
+        this.scoreSign.setNumber( 0 );
+        this.tickingActors.push(this.scoreSign);
+
+        this.timeSign = new DynamicSign(this, this.world);    
+        this.timeSign.object3D.position.set(2.5,0,-5);
+        this.timeSign.object3D.rotation.y = -0.2
+        this.timeSign.setMessage("Time");
+        this.timeSign.setNumber(window.game.timeRemaining);
+        this.tickingActors.push(this.timeSign);
 
         this.freezeFrameTimer = 0;
         this.freezeFrameTime = 0;
@@ -81,7 +91,6 @@ class Scene2 extends THREE.Scene {
             sheep.object3D.position.y = 2.23;
             this.tickingActors.push(sheep);
         }    
-        this.sign.setNumSheep( this.numSheep );
 
         this.bPause = false;
         
@@ -102,7 +111,6 @@ class Scene2 extends THREE.Scene {
                 }
             }
         }
-
 
         document.body.onmousemove = (e)=>{
 
@@ -139,12 +147,6 @@ class Scene2 extends THREE.Scene {
         this.controls.update();
         tickActors(this.tickingActors, delta);
     }    
-  }
-
-  removeSheep()
-  {
-    this.numSheep--;
-    this.sign.setNumSheep( this.numSheep );
   }
 }
 

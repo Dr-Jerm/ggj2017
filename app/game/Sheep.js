@@ -127,7 +127,7 @@ class Sheep extends Actor {
       if (_dist < this.pen.radius)
       {
         this.setPenned();        
-        this.scene.removeSheep()
+        window.game.incrementScore();
       }
   }
 

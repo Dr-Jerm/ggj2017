@@ -79,10 +79,16 @@ class Scene1 extends THREE.Scene {
     
     this.pen = new Pen(this, this.world, new THREE.Vector3(3,2.8,2));
 
-    this.sign = new DynamicSign(this, this.world);    
-    this.sign.object3D.position.set(10,0,0);
-    this.sign.object3D.scale.set(10,10,10);
-    this.tickingActors.push(this.sign);
+    this.scoreSign = new DynamicSign(this, this.world);    
+    this.scoreSign.object3D.position.set(-2,0,-5);
+    this.scoreSign.setMessage("Score");
+    this.scoreSign.setNumber( 0 );
+    this.tickingActors.push(this.scoreSign);
+
+    this.timeSign = new DynamicSign(this, this.world);    
+    this.timeSign.object3D.position.set(0,0,-5);
+    this.timeSign.setMessage("Time");
+    this.tickingActors.push(this.timeSign);
 
     this.numSheep = 10;
     for(var i=0; i<this.numSheep; i++)
@@ -91,7 +97,6 @@ class Scene1 extends THREE.Scene {
         sheep.object3D.position.y = 2.23;
         this.tickingActors.push(sheep);
     }    
-    this.sign.setNumSheep( this.numSheep );
 
     this.bPause = false;
     
@@ -117,12 +122,6 @@ class Scene1 extends THREE.Scene {
     this.world.step(1/60);
     this.controls.update();
     tickActors(this.tickingActors, delta);
-  }
-  removeSheep()
-  {
-    this.numSheep--;
-    console.log("LESS SHEEP ", this.numSheep);
-    this.sign.setNumSheep( this.numSheep );
   }
 }
 

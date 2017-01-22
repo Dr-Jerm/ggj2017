@@ -11,6 +11,10 @@ class Game extends Actor {
     this.world = world;
     
     this.score = 0;
+    this.timeRemaining = 60;
+
+    this.gameStart = false;
+    this.gameOver = false;
     
     this.impactConfig = {
       scalar: 4000.0,
@@ -19,14 +23,18 @@ class Game extends Actor {
       forceThreshold: 1.0
     };
     
-    
-    
   }
   
   impact(vector3Location, floatScale, hand) {
     if (this.scene.ripplePlane) {
       this.scene.ripplePlane.acceptPunch(vector3Location, hand);
     }
+
+    if(!this.gameStart)
+    {
+      this.gameStart = true;
+    }
+
     let tickables = this.scene.tickingActors;
     for (let i = 0; i < tickables.length; i++) {
       let ticker = tickables[i];
@@ -53,9 +61,36 @@ class Game extends Actor {
       // ticker.body.applyImpulse(force,worldPoint);
     }
   }
+
+  incrementScore()
+  {
+    if(!this.gameOver)
+    {
+      this.score++;
+      this.scene.scoreSign.setNumber( this.score );
+    }
+  }
+
+  updateTime(delta)
+  {
+    this.timeRemaining -= delta;
+    this.timeRemaining = Math.max(0, this.timeRemaining);
+    var _secondsRemaining = Math.floor(this.timeRemaining);
+    this.scene.timeSign.setNumber( _secondsRemaining );
+
+    if(this.timeRemaining <= 0)
+    {
+      this.gameOver = true;
+    }
+  }
   
   tick(delta) {
     super.tick(delta);
+
+    if(this.gameStart && !this.gameOver)
+    {
+      this.updateTime(delta);
+    }
   }
 }
 
