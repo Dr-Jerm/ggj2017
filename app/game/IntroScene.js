@@ -23,7 +23,7 @@ class IntroScene extends THREE.Scene {
       70,
       window.innerWidth/window.innerHeight,
       0.1,
-      1000
+      1000000
     );
     camera.position.y = 10;
     camera.rotation.z = 10;
@@ -50,19 +50,6 @@ class IntroScene extends THREE.Scene {
   
     this.sheep = new Sheep(this, this.world);
     this.ripplePlane = new RipplePlane(this, this.world);
-    this.signs = [];
-    var sign_count = 6;
-    for (var i = 0; i < sign_count; i++) {
-      this.signs[i] = new Sign(this, this.world, i);
-      var angle = -i * 2 * Math.PI / sign_count - Math.PI / 2;
-      this.signs[i].object3D.position.x = 
-        1.25 * Math.cos(i * 2 * Math.PI / sign_count);
-      this.signs[i].object3D.position.z = 
-        1.25 * Math.sin(i * 2 * Math.PI / sign_count);
-
-
-      this.signs[i].object3D.rotation.y = angle;
-    }
       
     document.body.onkeyup = (e) => {
       if(e.keyCode == 32){
@@ -75,7 +62,7 @@ class IntroScene extends THREE.Scene {
   
   tick (delta) {
     this.controls.update();
-    this.sheep.tick(delta);
+    //this.sheep.tick(delta);
     this.ripplePlane.tick(delta);
   }
   

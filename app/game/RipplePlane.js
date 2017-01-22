@@ -20,7 +20,6 @@ class RipplePlane extends Actor {
       this.WIDTH - 1,
       this.WIDTH - 1
     );
-    console.log(THREE.UniformsLib['lights']);
 
     this.material = new THREE.ShaderMaterial({
       uniforms: {
@@ -35,17 +34,33 @@ class RipplePlane extends Actor {
 
     });
 
+    var loader = new THREE.OBJLoader();
+    loader.setPath('./models/obj/island/');
+    var self = this;
+
+    loader.load('island_top.obj', function(object) {
+      var island = object.children[0];
+      island.geometry.computeFaceNormals();
+      island.geometry.computeVertexNormals();
+      island.material = self.material;
+      
+      self.object3D.add(island.clone());
+      scene.add(self.object3D);
+      //self.object3D.scale.set(0.1, 0.1, 0.1);
+    });
+
+/*
     this.object3D = new THREE.Mesh(
       this.geometry, 
       this.material
     );
 
-    this.object3D.rotation.x = -Math.PI / 2;
-    this.object3D.matrixAutoUpdate = false;
-    this.object3D.updateMatrix();
+   this.object3D.rotation.x = -Math.PI / 2;
+   this.object3D.matrixAutoUpdate = false;
+   this.object3D.updateMatrix();
 
     scene.add(this.object3D);
-
+*/
   }
 
   acceptPunch(punch_location, hand) {

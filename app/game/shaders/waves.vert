@@ -20,12 +20,12 @@ void main() {
   float radiusLeftInside = timeLeft - 0.05;
 
   if (dist.x * dist.x + dist.y * dist.y < radiusLeftOutside * radiusLeftOutside) {
-    vec3 offset = vec3(0.0, 0.0, 1.0);
+    vec3 offset = vec3(0.0, 1.0, 0.0);
     newPosition = newPosition + offset;
   }
 
   if (dist.x * dist.x + dist.y * dist.y < radiusLeftInside * radiusLeftInside) {
-    vec3 offset = vec3(0.0, 0.0, -1.0);
+    vec3 offset = vec3(0.0, -1.0, 0.0);
     newPosition = newPosition + offset;
   }
 
