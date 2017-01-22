@@ -31,26 +31,6 @@ class Game extends Actor {
       let worldPoint = ticker.body.position;
       let force = new CANNON.Vec3(_force.x,Math.abs(_force.y) * this.impactYScalar,_force.z);
       ticker.body.applyImpulse(force,worldPoint);
-      
-      
-      // here be debug
-      // console.log('Adding impulse on actor ' + ticker.toString() + ' at location ' + worldPoint.toString() + ' of strength ' + force);
-      
-      // var material = new THREE.LineBasicMaterial({
-      //   color: Math.random() * 0xffffff
-      // });
-  
-      // var geometry = new THREE.Geometry();
-      // let vec1 = MathHelpers.cannonVec3ToThreeVec3( worldPoint );
-      // let vec2 = MathHelpers.cannonVec3ToThreeVec3(worldPoint).clone().add(force);
-      // geometry.vertices.push(
-      //   vec1,
-      //   vec2
-      // );
-  
-      // let line = new THREE.Line( geometry, material );
-      // //this.object3D.add( line );
-      // this.scene.add( line );
     }
   }
   

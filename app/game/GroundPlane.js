@@ -6,21 +6,39 @@ import CANNON from 'cannon';
 class GroundPlane extends Actor {
   constructor(scene, world) {
     super(scene, world);
+    this.physicsScale = {
+      x: 10.0,
+      y: 1.0,
+      z: 10.0
+    };
+    // this.geometry = new THREE.PlaneGeometry( 2, 2, 1, 1 );
+    // //this.geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+    // this.material = new THREE.MeshLambertMaterial( { color: 0x777777 } );
+    // //THREE.ColorUtils.adjustHSV( this.material.color, 0, 0, 0.9 );
+    // this.object3D = new THREE.Mesh( this.geometry, this.material );
+    // this.object3D.quaternion.setFromAxisAngle(new THREE.Vector3(1,0,0), -Math.PI / 2);
     
-    this.geometry = new THREE.PlaneGeometry( 2, 2, 1, 1 );
-    //this.geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
-    this.material = new THREE.MeshLambertMaterial( { color: 0x777777 } );
-    //THREE.ColorUtils.adjustHSV( this.material.color, 0, 0, 0.9 );
-    this.object3D = new THREE.Mesh( this.geometry, this.material );
-    this.object3D.quaternion.setFromAxisAngle(new THREE.Vector3(1,0,0), -Math.PI / 2);
+    // this.shape = new CANNON.Plane();
+    // this.body = new CANNON.Body({ mass: 0 });
+    // this.body.addShape(this.shape);
+    // this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
     
-    this.shape = new CANNON.Plane();
-    this.body = new CANNON.Body({ mass: 0 });
+    // scene.add(this.object3D);
+    // world.addBody(this.body);
+    
+    this.shape = new CANNON.Box(new CANNON.Vec3(this.physicsScale.x,this.physicsScale.y,this.physicsScale.z));
+    let collisionMesh = new THREE.Mesh(
+      new THREE.BoxGeometry( this.physicsScale.x, this.physicsScale.y, this.physicsScale.z),
+      new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
+    );
+    this.object3D.add(collisionMesh);
+    this.mass = 0;
+    this.body = new CANNON.Body({
+      mass: this.mass
+    });
     this.body.addShape(this.shape);
-    this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
-    
-    scene.add(this.object3D);
     world.addBody(this.body);
+    scene.add(this.object3D);
   }
 }
 
