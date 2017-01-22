@@ -64,7 +64,7 @@ class Actor {
     
     if (this.physicsEnabled) {
     this.object3D.position.copy(this.body.position);
-    this.object3D.position.y = this.object3D.position.y - 1;
+    this.object3D.position.y = this.object3D.position.y - (1 * 0.25);
     this.object3D.quaternion.copy(this.body.quaternion);
     } else if (!this.physicsEnabled) {
       this.body.position.copy(this.object3D.position);
@@ -99,7 +99,7 @@ class Actor {
 
   clamp(val, min, max)
   {
-    return Math.min(Math.max(min, val), max)  
+    return Math.min(Math.max(min, val), max);
   }  
 }
 
