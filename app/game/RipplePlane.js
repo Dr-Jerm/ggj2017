@@ -21,13 +21,16 @@ class RipplePlane extends Actor {
       this.WIDTH - 1
     );
 
+    this.maxRippleSize = 400.0;
+
     this.material = new THREE.ShaderMaterial({
       uniforms: {
           rippleOriginLeft: { type: '2fv', value: new THREE.Vector2(1000, 1000) },
           rippleOriginRight: { type: '2fv', value: new THREE.Vector2(1000, 1000) },
           timeLeft: { type: 'f', value: 0 },
           timeRight: { type: 'f', value: 0 },
-          rippleSize: { type: 'f', value: 400.0 },
+          rippleSizeLeft: { type: 'f', value: this.maxRippleSize },
+          rippleSizeRight: { type: 'f', value: this.maxRippleSize },
           falloff: { type: 'f', value: 10.0 }
         },
       vertexShader: waves_vert,
@@ -64,23 +67,31 @@ class RipplePlane extends Actor {
 */
   }
 
-  acceptPunch(punch_location, hand) {
+  acceptPunch(punch_location, hand, power) {
     punch_location = punch_location.clone().multiplyScalar(0.3);
     punch_location = new THREE.Vector2(punch_location.x, -punch_location.z);
     // punch_location = new THREE.Vector2(0,0);
-    hand = "left";
     console.log(punch_location);
+
     
     if (hand == "left") {
       this.material.uniforms["rippleOriginLeft"] = { 
         type: '2fv', 
         value: punch_location 
       };
+      this.material.uniforms["rippleSizeLeft"] = { 
+        type: 'f', 
+        value: this.maxRippleSize * power
+      };
       this.timeLeft = 0;
     } else {
       this.material.uniforms["rippleOriginRight"] = { 
         type: '2fv', 
         value: punch_location 
+      };
+      this.material.uniforms["rippleSizeRight"] = { 
+        type: 'f', 
+        value: this.maxRippleSize * power
       };
       this.timeRight = 0;
     }

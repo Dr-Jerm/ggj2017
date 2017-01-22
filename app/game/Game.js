@@ -26,10 +26,6 @@ class Game extends Actor {
   }
   
   impact(vector3Location, floatScale, hand) {
-    if (this.scene.ripplePlane) {
-      this.scene.ripplePlane.acceptPunch(vector3Location, hand);
-    }
-
     if(!this.gameStart)
     {
       this.gameStart = true;
@@ -60,6 +56,12 @@ class Game extends Actor {
       }
       // ticker.body.applyImpulse(force,worldPoint);
     }
+
+    if (this.scene.ripplePlane) {
+
+      this.scene.ripplePlane.acceptPunch(vector3Location, hand, floatScale / 0.001);
+    }
+
   }
 
   incrementScore()
