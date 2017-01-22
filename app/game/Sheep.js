@@ -65,7 +65,6 @@ class Sheep extends Actor {
 
     this.wanderRange = 1
 
-    this.targetPos = this.getNewTargetPos(this.wanderRange, this.wanderRange);
     this.velocity = new THREE.Vector3(0,0,0);
 
     this.brain = new FSM();
@@ -85,8 +84,9 @@ class Sheep extends Actor {
     this.rotationRate = 1;
 
     this.pen = scene.pen;
-
     this.bIsInPen = false;
+
+    this.targetPos = this.getNewTargetPos(this.wanderRange, this.wanderRange);
 
     scene.add(this.object3D);
     world.addBody(this.body);
@@ -278,26 +278,44 @@ class Sheep extends Actor {
   // Return the next target position
   getNewTargetPos(x, z)
   {
-    var randX = this.randFloatRange(-x,x);
-    var randZ = this.randFloatRange(-z,z);
-    var offset = new THREE.Vector3(randX,0,randZ);
     var _currentPos = this.getPosition();
-    var newTarget = _currentPos.add(offset);
-    return newTarget;
-  }
+    var _penPos = this.pen.getPosition();
+
+    var _difference = _penPos.clone().sub(_currentPos);
+    var _distance = _difference.length();
+    if(_distance >= 2)
+    {
+      var randX = this.randFloatRange(-x,x);
+      var randZ = this.randFloatRange(-z,z);
+      var offset = new THREE.Vector3(randX,0,randZ);
+      var _currentPos = this.getPosition();
+      var newTarget = _currentPos.add(offset);
+      return newTarget;
+    }
+    else
+    {
+      var _penDir = _difference.normalize().multiplyScalar(-1);
+      var randX = this.randFloatRange(0,z);
+      var randZ = this.randFloatRange(0,z);
+      var _cPerpVect = new THREE.Vector3(_penDir.z, 0, -_penDir.x).multiplyScalar(randX);
+      var _ccPerpVect = new THREE.Vector3(-_penDir.z, 0, _penDir.x).multiplyScalar(randZ);
+
+      var _newDir = _penDir.add(_cPerpVect).add(_ccPerpVect);
+      var newTarget = _currentPos.add(_newDir);
+      return newTarget;
+    }
+  } 
 
   // Return the next target position
   getPenTargetPos()
   {
     var _penPos = this.pen.getPosition();
-    var _rad = this.pen.radius * 0.33;
+    var _rad = this.pen.radius * 0.1;
     var randX = this.randFloatRange(-_rad,_rad);
     var randZ = this.randFloatRange(-_rad,_rad);
     var offset = new THREE.Vector3(randX,0,randZ);
-    var newTarget = _penPos.add(offset);
+    var newTarget = _penPos;//.add(offset);
 
-    this.draweLine(_penPos, newTarget, 0x00ff00);
-    
     return newTarget;
   }
 
