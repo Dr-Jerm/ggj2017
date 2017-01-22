@@ -46,6 +46,7 @@ class Sign extends Actor {
       );
       
       self.object3D.add(signMesh.clone());
+      self.object3D.scale.set(10,10,10);
 
     });
     

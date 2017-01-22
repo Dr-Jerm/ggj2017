@@ -9,6 +9,7 @@ import GroundPlane from './GroundPlane';
 import Physics from './Physics';
 import Pen from './Pen';
 import DynamicSign from './DynamicSign';
+import Sign from './Sign';
 import RipplePlane from './RipplePlane';
 
 class Scene2 extends THREE.Scene {
@@ -79,6 +80,7 @@ class Scene2 extends THREE.Scene {
         this.scoreSign.setMessage("Score");
         this.scoreSign.setNumber( 0 );
         this.tickingActors.push(this.scoreSign);
+        this.scoreSign.object3D.visible = false;
 
         this.timeSign = new DynamicSign(this, this.world);    
         this.timeSign.object3D.position.set(2.5,0,-5);
@@ -86,9 +88,23 @@ class Scene2 extends THREE.Scene {
         this.timeSign.setMessage("Time");
         this.timeSign.setNumber(window.game.timeRemaining);
         this.tickingActors.push(this.timeSign);
+        this.timeSign.object3D.visible = false;
 
         this.freezeFrameTimer = 0;
         this.freezeFrameTime = 0;
+
+        this.signs = [];
+        var sign_count = 6;
+        for (var i = 0; i < sign_count; i++) {
+          this.signs[i] = new Sign(this, this.world, i);
+          var angle = -i * 2 * Math.PI / sign_count - Math.PI / 2;
+          this.signs[i].object3D.position.x = 
+            8 * Math.cos(i * 2 * Math.PI / sign_count);
+          this.signs[i].object3D.position.z = 
+            8 * Math.sin(i * 2 * Math.PI / sign_count);
+
+          this.signs[i].object3D.rotation.y = angle;
+        }
 
         this.numSheep = 100;
         for(var i=0; i<this.numSheep; i++)
@@ -125,6 +141,7 @@ class Scene2 extends THREE.Scene {
 
             this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
             this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
         }
 
         document.body.onmousedown = (e)=>{
@@ -145,15 +162,25 @@ class Scene2 extends THREE.Scene {
         }
     }
   
-  tick (delta) {
-    if(!this.bPause)
-    {
-        // this.world.step(delta);
-        this.world.step(1/60);
-        this.controls.update();
-        tickActors(this.tickingActors, delta);
-    }    
-  }
+    beginGame() {
+        for (var key in this.signs) {
+            let sign = this.signs[key];
+            sign.object3D.visible = false;
+        }
+        this.scoreSign.object3D.visible = true;
+        this.timeSign.object3D.visible = true;
+    }
+
+
+    tick (delta) {
+        if(!this.bPause)
+        {
+            // this.world.step(delta);
+            this.world.step(1/60);
+            this.controls.update();
+            tickActors(this.tickingActors, delta);
+        }    
+      }
 }
 
 let tickActors = function (actors, delta) {

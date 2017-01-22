@@ -8,6 +8,7 @@ import GroundPlane from './GroundPlane';
 import Pen from './Pen';
 import Sheep from './Sheep';
 import DynamicSign from './DynamicSign';
+import Sign from './Sign';
 import RipplePlane from './RipplePlane';
 
 class Scene1 extends THREE.Scene {
@@ -85,6 +86,7 @@ class Scene1 extends THREE.Scene {
     this.scoreSign.setMessage("Score");
     this.scoreSign.setNumber( 0 );
     this.tickingActors.push(this.scoreSign);
+    this.scoreSign.visible = false;
 
     this.timeSign = new DynamicSign(this, this.world);    
     this.timeSign.object3D.position.set(2.5,0,-5);
@@ -92,6 +94,21 @@ class Scene1 extends THREE.Scene {
     this.timeSign.setMessage("Time");
     this.timeSign.setNumber(window.game.timeRemaining);
     this.tickingActors.push(this.timeSign);
+    this.timeSign.visible = false;
+
+    this.signs = [];
+    var sign_count = 6;
+    for (var i = 0; i < sign_count; i++) {
+      this.signs[i] = new Sign(this, this.world, i);
+      var angle = -i * 2 * Math.PI / sign_count - Math.PI / 2;
+      this.signs[i].object3D.position.x = 
+        8 * Math.cos(i * 2 * Math.PI / sign_count);
+      this.signs[i].object3D.position.z = 
+        8 * Math.sin(i * 2 * Math.PI / sign_count);
+
+      this.signs[i].object3D.rotation.y = angle;
+    }
+
 
     this.numSheep = 50;
     for(var i=0; i<this.numSheep; i++)
@@ -119,6 +136,15 @@ class Scene1 extends THREE.Scene {
       }
     }
   }
+
+  beginGame() {
+        for (var key in this.signs) {
+            let sign = this.signs[key];
+            sign.object3D.visible = false;
+        }
+        this.scoreSign.object3D.visible = true;
+        this.timeSign.object3D.visible = true;
+    }
   
   tick (delta) {
     // this.world.step(delta);

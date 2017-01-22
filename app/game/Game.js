@@ -28,6 +28,7 @@ class Game extends Actor {
   impact(vector3Location, floatScale, hand) {
     if(!this.gameStart)
     {
+      this.scene.beginGame();
       this.gameStart = true;
     }
 
