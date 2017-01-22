@@ -15,22 +15,30 @@ void main() {
   vUv = uv;
   noise = 0.0;
   
-  vec2 dist = ((rippleOriginLeft + 0.5) - uv); 
+  vec2 distLeft = ((rippleOriginLeft + 0.5) - uv); 
   vec3 newPosition = position;
   float radiusLeftOutside = timeLeft;
   float radiusLeftInside = timeLeft - 0.05;
+
+  vec2 distRight = ((rippleOriginRight + 0.5) - uv); 
+  float radiusRightOutside = timeRight;
+  float radiusRightInside = timeRight - 0.05;
+
   vColor = vec4(0.3, 0.5, 0.0, 1.0);
 
-  if (dist.x * dist.x + dist.y * dist.y < radiusLeftOutside * radiusLeftOutside) {
+  if (( distLeft.x * distLeft.x + distLeft.y * distLeft.y < 
+        radiusLeftOutside * radiusLeftOutside &&
+        distLeft.x * distLeft.x + distLeft.y * distLeft.y > 
+        radiusLeftInside * radiusLeftInside) ||
+      ( distRight.x * distRight.x + distRight.y * distRight.y < 
+        radiusRightOutside * radiusRightOutside &&
+        distRight.x * distRight.x + distRight.y * distRight.y > 
+        radiusRightInside * radiusRightInside)) {
+
     vec3 offset = vec3(0.0, 1.5, 0.0);
     newPosition = newPosition + offset;
-    vColor = vec4(1.0, 1.0, 1.0, 1.0);
-  }
 
-  if (dist.x * dist.x + dist.y * dist.y < radiusLeftInside * radiusLeftInside) {
-    vec3 offset = vec3(0.0, -1.5, 0.0);
-    newPosition = newPosition + offset;
-    vColor = vec4(0.3, 0.5, 0.0, 1.0);
+    vColor = vec4(0.0, 0.2, 0.0, 1.0);
   }
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );

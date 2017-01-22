@@ -76,7 +76,6 @@ class RipplePlane extends Actor {
         value: punch_location 
       };
       this.timeRight = 0;
-
     }
   }
 
@@ -86,6 +85,10 @@ class RipplePlane extends Actor {
     this.material.uniforms.timeLeft = { 
       type: 'f', 
       value: this.timeLeft
+    };
+    this.material.uniforms.timeRight = { 
+      type: 'f', 
+      value: this.timeRight
     };
     super.tick(delta);
   }
