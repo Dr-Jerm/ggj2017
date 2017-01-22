@@ -68,7 +68,6 @@ class Game extends Actor {
   {
     if(!this.gameOver)
     {
-
       this.score++;
       this.scene.scoreSign.setNumber( this.score );
       console.log("INCREMENT: ", this.score)
@@ -85,15 +84,22 @@ class Game extends Actor {
     if(this.timeRemaining <= 0)
     {
       this.gameOver = true;
+      this.scene.timeSign.setMessage("Restarting")
+      this.timeRemaining = 10;
     }
   }
   
   tick(delta) {
     super.tick(delta);
 
+
+    this.updateTime(delta);
     if(this.gameStart && !this.gameOver)
     {
-      this.updateTime(delta);
+    }
+    else if(this.gameOver)
+    {
+
     }
   }
 }

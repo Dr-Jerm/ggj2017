@@ -80,17 +80,20 @@ class Scene1 extends THREE.Scene {
     this.pen = new Pen(this, this.world, new THREE.Vector3(0,2.18,0));
 
     this.scoreSign = new DynamicSign(this, this.world);    
-    this.scoreSign.object3D.position.set(-2,0,-5);
+    this.scoreSign.object3D.position.set(-2.2,0,-5);   
+    this.scoreSign.object3D.rotation.y = 0.3
     this.scoreSign.setMessage("Score");
     this.scoreSign.setNumber( 0 );
     this.tickingActors.push(this.scoreSign);
 
     this.timeSign = new DynamicSign(this, this.world);    
-    this.timeSign.object3D.position.set(0,0,-5);
+    this.timeSign.object3D.position.set(2.5,0,-5);
+    this.timeSign.object3D.rotation.y = -0.2
     this.timeSign.setMessage("Time");
+    this.timeSign.setNumber(window.game.timeRemaining);
     this.tickingActors.push(this.timeSign);
 
-    this.numSheep = 100;
+    this.numSheep = 50;
     for(var i=0; i<this.numSheep; i++)
     {
         var sheep = new Sheep(this, this.world);

@@ -134,30 +134,38 @@ class Sheep extends Actor {
   tick(delta)
   {
     super.tick(delta);
-
-    var _currentBodyPos =MathHelpers.cannonVec3ToThreeVec3(this.body.position);
-    _currentBodyPos.add(new THREE.Vector3(0,0.01,0));
-    this.raycaster.set(_currentBodyPos, new THREE.Vector3(0,-0.02,0));    
+    
     this.brain.tick(delta);
     this.updateTransform(delta);   
+
 
     if(!this.bIsInPen)
     {
       this.checkIsInPen(); 
     }
 
-    var _ground = window.game.scene.ripplePlane.object3D;    
-    var _intersects = this.raycaster.intersectObject(_ground, true)
-    if(_intersects.length <= 0)
+    var _currentBodyPos =MathHelpers.cannonVec3ToThreeVec3(this.body.position);
+    // walked off the edge
+    if( !this.physicsEnabled )
     {
-      // walked off the edge
-      if( !this.physicsEnabled )
+      _currentBodyPos.y = 0 ;
+      var _distToCenter = _currentBodyPos.sub(new THREE.Vector3(0,0,0)).length();
+      if(_distToCenter > 1.48)
       {
         this.physicsEnabled = true;    
         this.body.velocity = new CANNON.Vec3(0,0,0);
         this.body.angularVelocity = new CANNON.Vec3(0,0,0); 
-      }        
-      else
+      }
+    }  
+    else
+    {
+      var _rayCastOrigin = _currentBodyPos.clone().add(new THREE.Vector3(0,0.01,0));
+      this.raycaster.set(_rayCastOrigin, new THREE.Vector3(0,-0.02,0));    
+      
+
+      var _ground = window.game.scene.ripplePlane.object3D;    
+      var _intersects = this.raycaster.intersectObject(_ground, true)
+      if(_intersects.length <= 0)
       {
         var _currentHeight = this.body.position.clone().y;
         // If we've fallen off the table, respawn
@@ -168,12 +176,12 @@ class Sheep extends Actor {
           this.body.position.z = this.getRandStart();
           this.body.velocity = new CANNON.Vec3(0,-.1,0);
           this.body.angularVelocity = new CANNON.Vec3(0,0,0);
-        }
-      } 
-    }
-    else if(this.physicsEnabled)
-    {
-      this.checkIfLanded(delta);
+        }   
+      }
+      else
+      {
+        this.checkIfLanded(delta);  
+      }      
     }
   }
   

@@ -27,7 +27,7 @@ class Scene2 extends THREE.Scene {
           70,
           window.innerWidth/window.innerHeight,
           0.1,
-          1000
+          10000
         );
         camera.position.y = 10;
         //camera.rotation.x = 10;
