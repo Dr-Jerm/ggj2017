@@ -13,16 +13,20 @@ class Game extends Actor {
     this.score = 0;
     
     this.impactConfig = {
-      scalar: 5000.0,
-      yScalar: 4.0,
-      maxRange: 3
+      scalar: 4000.0,
+      yScalar: 15.0,
+      maxRange: 3,
+      forceThreshold: 1.0
     };
     
     
     
   }
   
-  impact(vector3Location, floatScale) {
+  impact(vector3Location, floatScale, hand) {
+    if (this.scene.ripplePlane) {
+      this.scene.ripplePlane.acceptPunch(vector3Location, hand);
+    }
     let tickables = this.scene.tickingActors;
     for (let i = 0; i < tickables.length; i++) {
       let ticker = tickables[i];
@@ -37,6 +41,9 @@ class Game extends Actor {
       // _distanceScale = 1/(Math.pow(_distanceScale, 2));
       
       let _force = _diff.clone().normalize().multiplyScalar(_distanceScale).multiplyScalar(this.impactConfig.scalar);
+      
+      console.log(_force.length())
+      if (_force.length() < this.impactConfig.forceThreshold) continue;
       
       let worldPoint = ticker.body.position;
       let force = new CANNON.Vec3(_force.x,Math.abs(_force.y) * this.impactConfig.yScalar,_force.z);

@@ -16,7 +16,7 @@ class Controller extends THREE.ViveController  {
       console.log("triggerDown "+ this.index);
       var matrix = this.matrixWorld;
       var worldLocation = new THREE.Vector3().setFromMatrixPosition( matrix );
-      window.game.impact(worldLocation, this.velocity.length());
+      window.game.impact(worldLocation, this.velocity.length(), this.index ? "right" : "left");
     };
     this.onTriggerUp = (event) => {
       console.log("triggerUp "+ this.index);

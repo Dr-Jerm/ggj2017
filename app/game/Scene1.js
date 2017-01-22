@@ -8,6 +8,7 @@ import GroundPlane from './GroundPlane';
 import Pen from './Pen';
 import Sheep from './Sheep';
 import DynamicSign from './DynamicSign';
+import RipplePlane from './RipplePlane';
 
 class Scene1 extends THREE.Scene {
   constructor(renderer) {
@@ -71,7 +72,12 @@ class Scene1 extends THREE.Scene {
     groundPlane.object3D.position.set(0,1.7,0);
     groundPlane.body.position.set(0,1.7,0);
     
-    this.endPen = new Pen(this, this.world, new THREE.Vector3(10,0,0));
+    // this.ripplePlane = new RipplePlane(this, this.world);
+    // this.tickingActors.push(this.ripplePlane);
+    // this.ripplePlane.object3D.position.set(0,1.78,0);
+    // this.ripplePlane.object3D.scale.set(0.2,1,0.2);
+    
+    this.pen = new Pen(this, this.world, new THREE.Vector3(3,2.8,2));
 
     this.sign = new DynamicSign(this, this.world);    
     this.sign.object3D.position.set(10,0,0);
@@ -82,7 +88,7 @@ class Scene1 extends THREE.Scene {
     for(var i=0; i<this.numSheep; i++)
     {
         var sheep = new Sheep(this, this.world);
-        sheep.object3D.position.y = 2.25;
+        sheep.object3D.position.y = 2.23;
         this.tickingActors.push(sheep);
     }    
     this.sign.setNumSheep( this.numSheep );

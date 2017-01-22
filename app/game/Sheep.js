@@ -2,6 +2,7 @@
 import Actor from '../core/Actor';
 import CANNON from 'cannon';
 import FSM from './FSM';
+import MathHelpers from '../util/MathHelpers';
 
 
 class Sheep extends Actor {
@@ -11,9 +12,10 @@ class Sheep extends Actor {
     //this.object3D.scale.set(0.1,0.1,0.1);
 
     // this.hackyYOffset = 0.56;
+    this.lastPosition = THREE.Vector3();
     
     this.physicsEnabled = false;
-    this.totalScale = 0.15;
+    this.totalScale = 0.075;
     this.physicsScale = new THREE.Vector3(1.0, 0.7, 0.5);
     
     var self = this;
@@ -119,13 +121,20 @@ class Sheep extends Actor {
     }
     
     if (this.physicsEnabled) {
-      this.checkIfLanded(delta)
+      this.checkIfLanded(delta);
     }
     //this.drawDebugLines()
   }
   
   checkIfLanded (delta) {
+    let _currentPosition = MathHelpers.cannonVec3ToThreeVec3(this.body.position);
     
+    // let _diff = _currentPosition.clone()
+    
+    
+    
+    
+    this.lastPosition = MathHelpers.cannonVec3ToThreeVec3(this.body.position);
   }
   
   bump (forceVector, sourceVector) {
