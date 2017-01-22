@@ -64,6 +64,12 @@ class RipplePlane extends Actor {
   }
 
   acceptPunch(punch_location, hand) {
+    punch_location = punch_location.clone().multiplyScalar(0.3);
+    punch_location = new THREE.Vector2(punch_location.x, -punch_location.z);
+    // punch_location = new THREE.Vector2(0,0);
+    hand = "left";
+    console.log(punch_location);
+    
     if (hand == "left") {
       this.material.uniforms["rippleOriginLeft"] = { 
         type: '2fv', 

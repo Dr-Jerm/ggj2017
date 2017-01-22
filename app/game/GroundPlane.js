@@ -32,7 +32,7 @@ class GroundPlane extends Actor {
       new THREE.MeshStandardMaterial( { color: 0x777777, roughness: 1.0, metalness: 0, wireframe: false } )
     );
     collisionMesh.receiveShadow = true;
-    this.object3D.add(collisionMesh);
+    // this.object3D.add(collisionMesh);
     this.mass = 0;
     this.body = new CANNON.Body({
       mass: this.mass

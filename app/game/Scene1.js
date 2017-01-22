@@ -72,12 +72,12 @@ class Scene1 extends THREE.Scene {
     this.groundPlane.object3D.position.set(0,1.7,0);
     this.groundPlane.body.position.set(0,1.7,0);
     
-    // this.ripplePlane = new RipplePlane(this, this.world);
-    // this.tickingActors.push(this.ripplePlane);
-    // this.ripplePlane.object3D.position.set(0,1.78,0);
-    // this.ripplePlane.object3D.scale.set(0.2,1,0.2);
+    this.ripplePlane = new RipplePlane(this, this.world);
+    this.tickingActors.push(this.ripplePlane);
+    this.ripplePlane.object3D.position.set(0,2.2,0);
+    this.ripplePlane.object3D.scale.set(0.06,0.06,0.06);
     
-    this.pen = new Pen(this, this.world, new THREE.Vector3(3,2.8,2));
+    this.pen = new Pen(this, this.world, new THREE.Vector3(0,2.18,0));
 
     this.sign = new DynamicSign(this, this.world);    
     this.sign.object3D.position.set(10,0,0);
