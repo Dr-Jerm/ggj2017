@@ -383,7 +383,7 @@ class Sheep extends Actor {
   getPenTargetPos()
   {
     var _penPos = this.pen.getPosition();
-    var _rad = this.pen.radius * 0.1;
+    var _rad = this.pen.radius * 0.5;
     var randX = this.randFloatRange(-_rad,_rad);
     var randZ = this.randFloatRange(-_rad,_rad);
     var offset = new THREE.Vector3(randX,0,randZ);
