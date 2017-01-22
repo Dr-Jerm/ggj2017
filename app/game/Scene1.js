@@ -112,7 +112,7 @@ class Scene1 extends THREE.Scene {
     }
 
 
-    this.numSheep = 50;
+    this.numSheep = 30;
     for(var i=0; i<this.numSheep; i++)
     {
         var sheep = new Sheep(this, this.world);
@@ -125,9 +125,6 @@ class Scene1 extends THREE.Scene {
     document.body.onkeyup = function(e){
       if(e.keyCode == 32){
         console.log("I pressed spacebar");
-        var worldPoint = new CANNON.Vec3(0,0,0);
-        var force = new CANNON.Vec3(0,10,0);
-        // physics.body.applyImpulse(force,worldPoint);
         for (let i = 0; i < this.tickingActors.length; i++) 
         {
           if(this.tickingActors[i].object3D.name == "Sheep")

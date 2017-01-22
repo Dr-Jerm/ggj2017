@@ -91,7 +91,10 @@ class Game extends Actor {
       }
       else
       {
-        window.location.reload(false); 
+        // let refresh = function () {
+        //   window.location.reload(false); 
+        // }
+        // setTimeout(refresh, 0);
       }
     }
   }
