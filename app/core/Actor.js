@@ -61,9 +61,10 @@ class Actor {
     this.object3D.position.copy(this.body.position);
     this.object3D.position.y = this.object3D.position.y - 1;
     this.object3D.quaternion.copy(this.body.quaternion);
-  } else if (!this.physicsEnabled) {
-    this.body.position.copy(this.object3D.position);
-    this.body.quaternion.copy(this.object3D.quaternion);
+    } else if (!this.physicsEnabled) {
+      this.body.position.copy(this.object3D.position);
+      this.body.quaternion.copy(this.object3D.quaternion);
+    }
   }
 
   clearLines()
