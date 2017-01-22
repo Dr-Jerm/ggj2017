@@ -12,7 +12,7 @@ class Physics extends Actor {
     this.hackyYOffset = 0.56;
     
     // this.object3D.scale.set(1.0, 1.0,1.0);
-    this.physicsEnabled = true;
+    this.physicsEnabled = false;
     this.totalScale = 0.15;
     this.physicsScale = new THREE.Vector3(1.0, 0.7, 0.5);
     

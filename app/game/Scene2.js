@@ -3,6 +3,10 @@
 
 import CANNON from 'cannon';
 import Sheep from './Sheep';
+import Game from './Game';
+import Skybox from './Skybox';
+import GroundPlane from './GroundPlane';
+import Physics from './Physics';
 import Pen from './Pen';
 import DynamicSign from './DynamicSign';
 
@@ -14,7 +18,7 @@ class Scene2 extends THREE.Scene {
     renderer.setClearColor(0xf0f0f0, 1);
 
     this.world = new CANNON.World();
-    this.world.gravity.set(0,0,0);
+    this.world.gravity.set(0,-4.9,0);
     this.world.broadphase = new CANNON.NaiveBroadphase();
     this.world.solver.iterations = 10;
 
@@ -30,6 +34,8 @@ class Scene2 extends THREE.Scene {
     this.controls.enableZoom = true;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.25;
+
+    this.tickingActors = [];
     
     this.add(camera);
     this.camera = camera;
@@ -46,17 +52,32 @@ class Scene2 extends THREE.Scene {
     
     light.shadow.mapSize.set(4096, 4096);
     this.add(light);
+
+    window.game = new Game(this, this.world);
+    this.tickingActors.push(window.game);
+
+    let skybox = new Skybox(this, this.world);
+
+    let groundPlane = new GroundPlane(this, this.world);
+    groundPlane.object3D.position.set(0,1.7,0);
+    groundPlane.body.position.set(0,1.7,0);
+    
+    let physics = new Physics(this, this.world);
+    physics.body.position.set(0,2.8,0);
+    this.tickingActors.push(physics);
   
     this.endPen = new Pen(this, this.world, new THREE.Vector3(10,0,0));
 
     this.sign = new DynamicSign(this, this.world);    
+    this.sign.object3D.position.set(10,0,0);
     this.sign.object3D.scale.set(10,10,10);
+    this.tickingActors.push(this.sign);
 
-    this.numSheep = 20;
-    this.herd = [];
+    this.numSheep = 10;
     for(var i=0; i<this.numSheep; i++)
     {
-        this.herd[i] = new Sheep(this, this.world);          
+        var sheep = new Sheep(this, this.world);     
+        this.tickingActors.push(sheep);
     }    
     this.sign.setNumSheep( this.numSheep );
 
@@ -67,21 +88,28 @@ class Scene2 extends THREE.Scene {
             console.log("I pressed spacebar");
             this.bPause = !this.bPause;
         }
+        else if(e.keyCode == 87){
+            console.log("87!");            
+            for (let i = 0; i < this.tickingActors.length; i++) 
+            {
+                if(this.tickingActors[i].object3D.name == "Sheep")
+                {
+                    this.tickingActors[i].physicsEnabled = !this.tickingActors[i].physicsEnabled;
+                }
+
+            }
+        }
       }
-    
+
   }
   
   tick (delta) {
     if(!this.bPause)
     {
+        // this.world.step(delta);
+        this.world.step(1/60);
         this.controls.update();
-
-        for(var i=0; i<this.herd.length; i++)
-        {
-            this.herd[i].tick(delta);
-        } 
-
-        this.sign.tick(delta);
+        tickActors(this.tickingActors, delta);
     }    
   }
 
@@ -91,7 +119,14 @@ class Scene2 extends THREE.Scene {
     console.log("LESS SHEEP ", this.numSheep);
     this.sign.setNumSheep( this.numSheep );
   }
-  
+}
+
+let tickActors = function (actors, delta) {
+for (let i = 0; i < actors.length; i++) {
+        if (actors[i].tick) {
+            actors[i].tick(delta);
+        }
+    }
 }
 
 module.exports = Scene2;
