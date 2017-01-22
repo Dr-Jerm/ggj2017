@@ -74,7 +74,8 @@ class Scene2 extends THREE.Scene {
     this.numSheep = 50;
     for(var i=0; i<this.numSheep; i++)
     {
-        var sheep = new Sheep(this, this.world);     
+        var sheep = new Sheep(this, this.world);
+        sheep.object3D.position.y = 2.25;
         this.tickingActors.push(sheep);
     }    
     this.sign.setNumSheep( this.numSheep );

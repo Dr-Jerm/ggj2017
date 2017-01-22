@@ -10,7 +10,7 @@ class Sheep extends Actor {
     this.ticks = true;
     //this.object3D.scale.set(0.1,0.1,0.1);
 
-    this.hackyYOffset = 0.56;
+    // this.hackyYOffset = 0.56;
     
     this.physicsEnabled = false;
     this.totalScale = 0.15;
@@ -47,7 +47,7 @@ class Sheep extends Actor {
       self.object3D.add(mesh);
     });
     
-    this.shape = new CANNON.Box(new CANNON.Vec3(this.physicsScale.x * this.totalScale,this.physicsScale.y * this.totalScale,this.physicsScale.z * this.totalScale));
+    this.shape = new CANNON.Box(new CANNON.Vec3((this.physicsScale.x * this.totalScale)/2,(this.physicsScale.y * this.totalScale)/2,(this.physicsScale.z * this.totalScale)/2));
     let collisionMesh = new THREE.Mesh(
       new THREE.BoxGeometry( this.physicsScale.x * this.totalScale, this.physicsScale.y * this.totalScale, this.physicsScale.z * this.totalScale),
       new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
