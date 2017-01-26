@@ -1,16 +1,16 @@
 This is Sky Shepard!
 
-
 Three.js + Cannon.js + WebVR
-
-
-Requires Node.js
-
+Requires Node.js to build
 
 To build: clone and:
-```npm install```
+```
+npm install
+```
 then
-```./node_modules/.bin/webpack```
+```
+./node_modules/.bin/webpack
+```
 
 Demo here:
 https://dr-jerm.github.io/SkyShepherd/
